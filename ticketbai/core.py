@@ -47,19 +47,16 @@ class Invoice:
         description,
         simplified=None,
         substitution=None,
-        expedition_date=None,
-        expedition_time=None,
-        transaction_date=None,
         vat_regime="01",
     ):
         now = datetime.now()
         self.serial_code = serial_code
         self.num = num
-        self.expedition_date = expedition_date or now.date
-        self.expedition_time = expedition_time or now.time
+        self.expedition_date = now.date()
+        self.expedition_time = now.time()
         self.simplified = simplified
         self.substitution = substitution
-        self.transaction_date = transaction_date or now.date
+        self.transaction_date = now.date()
         self.description = description
         self.vat_regime = vat_regime
         self.lines = []
@@ -88,11 +85,11 @@ class TBai:
         self.tbai_print = None
         self.signature = None
 
-    def create_simplified_invoice(self, serial_code, num, description):
+    def create_invoice(self, serial_code, num, description, simplified=None):
         self.invoice = Invoice(
             serial_code,
             num,
             description,
-            "S",
+            simplified,
         )
         return self.invoice
