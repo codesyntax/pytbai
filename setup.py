@@ -10,10 +10,10 @@ with open("LICENSE") as f:
     license = f.read()
 
 setup(
-    name="ticketpy",
+    name="ticketbai",
     version="0.1.0",
     description=(
-        "TicketPy allows to create, manage and send TicketBai invoices to the"
+        "TicketBai allows to create, manage and send TicketBai invoices to the"
         " Basque tax authorities"
     ),
     long_description=readme,
