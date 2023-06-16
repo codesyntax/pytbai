@@ -30,7 +30,7 @@ tbai = TBai(json)
 invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura", "S")
 ```
 
-The `json` parameter is a previous JSON file's content you've created.
+The `json` parameter is a previous JSON file you've created.
 
 ## How to contribute
 
