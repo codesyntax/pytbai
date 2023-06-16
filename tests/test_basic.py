@@ -3,7 +3,7 @@
 from ticketbai import TBai
 import unittest
 
-CONFIG = {
+CONFIG = """{
     "subject": {"entity_id": "99999974E", "name": "REPRESENTANTESPJ FICTICIO"},
     "software": {
         "license": "TBAIGIPRE00000000501",
@@ -11,7 +11,7 @@ CONFIG = {
         "soft_name": "FAKTURABAI",
         "soft_version": "1.0",
     },
-}
+}"""
 
 
 class BasicTestSuite(unittest.TestCase):
