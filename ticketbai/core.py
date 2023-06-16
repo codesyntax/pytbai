@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 TICKETBAI_ACTUAL_VERSION = "1.2"
 
@@ -73,16 +74,33 @@ class Invoice:
         self.lines.append(line)
 
     def delete_lines(self, lines):
+        curr_lines = self.lines
         for line in lines:
-            self.lines.remove(line)
+            curr_lines.remove(line)
+        self.lines = curr_lines
+
+
+class Software:
+    def __init__(
+        self,
+        license,
+        dev_entity,
+        soft_name,
+        soft_version,
+    ):
+        self.license = license
+        self.dev_entity = dev_entity
+        self.soft_name = soft_name
+        self.soft_version = soft_version
 
 
 class TBai:
-    def __init__(self, subject, version=TICKETBAI_ACTUAL_VERSION):
+    def __init__(self, initial_conf, version=TICKETBAI_ACTUAL_VERSION):
+        config = json.loads(initial_conf)
         self.version = version
-        self.subject = subject
+        self.subject = Subject(**config["subject"])
+        self.software = Software(**config["software"])
         self.invoice = None
-        self.tbai_print = None
         self.signature = None
 
     def create_invoice(self, serial_code, num, description, simplified=None):

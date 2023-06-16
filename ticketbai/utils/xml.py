@@ -24,5 +24,9 @@ def build_xml(tbai):
         expedition_date=tbai.invoice.expedition_date.strftime("%Y-%m-%d"),
         expedition_time=tbai.invoice.expedition_time.strftime("%H:%M:%S"),
         transaction_date=tbai.invoice.transaction_date.strftime("%Y-%m-%d"),
+        license=tbai.software.license,
+        dev_entity=tbai.software.dev_entity,
+        soft_name=tbai.software.soft_name,
+        soft_version=tbai.software.soft_version,
     )
     return xml

@@ -37,12 +37,12 @@
    <HuellaTBAI>
       <EncadenamientoFacturaAnterior></EncadenamientoFacturaAnterior>
       <Software>
-         <LicenciaTBAI>TBAIGIPRE00000000501</LicenciaTBAI>
+         <LicenciaTBAI>${license}</LicenciaTBAI>
          <EntidadDesarrolladora>
-            <NIF>P2000000F</NIF>
+            <NIF>${dev_entity}</NIF>
          </EntidadDesarrolladora>
-         <Nombre>FAKTURABAI</Nombre>
-         <Version>1.0</Version>
+         <Nombre>${soft_name}</Nombre>
+         <Version>${soft_version}</Version>
       </Software>
    </HuellaTBAI>
 </T:TicketBai>
