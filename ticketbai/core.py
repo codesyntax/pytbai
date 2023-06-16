@@ -95,8 +95,7 @@ class Software:
 
 
 class TBai:
-    def __init__(self, initial_conf, version=TICKETBAI_ACTUAL_VERSION):
-        config = json.loads(initial_conf)
+    def __init__(self, config, version=TICKETBAI_ACTUAL_VERSION):
         self.version = version
         self.subject = Subject(**config["subject"])
         self.software = Software(**config["software"])
