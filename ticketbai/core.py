@@ -47,18 +47,18 @@ class Invoice:
         description,
         simplified=None,
         substitution=None,
-        vat_regime="01",
+        vat_regime=None,
     ):
         now = datetime.now()
         self.serial_code = serial_code
         self.num = num
+        self.description = description
         self.expedition_date = now.date()
         self.expedition_time = now.time()
-        self.simplified = simplified
-        self.substitution = substitution
+        self.simplified = simplified or "N"
+        self.substitution = substitution or "N"
         self.transaction_date = now.date()
-        self.description = description
-        self.vat_regime = vat_regime
+        self.vat_regime = vat_regime or "01"
         self.lines = []
 
     def get_lines(self):
