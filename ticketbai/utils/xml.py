@@ -1,13 +1,14 @@
 import xml.etree.ElementTree as ET
-import importlib.resources as pkg_resources
-from .. import templates
+import os
+import ticketbai
 from string import Template
 
 
 def build_xml(tbai):
-    inp_file = pkg_resources.files(templates) / "XML/tbai_structure.xml"
-    with inp_file.open("rt") as f:
-        template = f.read()
+    path = os.path.dirname(ticketbai.__file__)
+    structure_file = os.path.join(path, "templates/XML/tbai_structure.xml")
+    with open(structure_file, "r") as file:
+        template = file.read()
     t = Template(template)
     xml = t.substitute(
         version=tbai.version,
