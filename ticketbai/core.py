@@ -35,7 +35,7 @@ class InvoiceLine:
     def set_total(self):
         line_base = round(self.quantity * self.unit_amount, 2)
         if self.discount:
-            self.total = line_base * (self.discount / 100)
+            self.total = line_base - (line_base * (self.discount / 100))
         else:
             self.total = line_base
 

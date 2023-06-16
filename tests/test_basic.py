@@ -44,6 +44,16 @@ class BasicTestSuite(unittest.TestCase):
         self.assertEqual(tbai.invoice.substitution, "N")
         self.assertEqual(tbai.invoice.vat_regime, "01")
 
+    def test_create_invoice_line(self):
+        tbai = TBai(CONFIG)
+        invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura")
+        invoice.create_line("Primer producto", 1, 200, 20)
+        invoice.create_line("Segundo producto", 2, 350)
+        self.assertTrue(invoice.get_lines())
+        lines = invoice.get_lines()
+        self.assertEqual(lines[0].total, 160)
+        self.assertEqual(lines[1].total, 700)
+
     def test_build_xml(self):
         tbai = TBai(CONFIG)
         tbai.create_invoice("TB-2021-S", 1, "Primera factura")
