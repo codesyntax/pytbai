@@ -26,7 +26,7 @@ class InvoiceLine:
         unit_amount=0,
         discount=0,
     ):
-        self.decription = description
+        self.description = description
         self.quantity = quantity
         self.unit_amount = unit_amount
         self.discount = discount
