@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 import importlib.resources as pkg_resources
-from ticketbai import templates
+from .. import templates
 from string import Template
 
 

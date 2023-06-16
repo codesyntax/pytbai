@@ -46,7 +46,7 @@ class BasicTestSuite(unittest.TestCase):
 
     def test_build_xml(self):
         tbai = TBai(CONFIG)
-        invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura")
+        tbai.create_invoice("TB-2021-S", 1, "Primera factura")
         xml = build_xml(tbai)
         self.assertIsNotNone(xml)
 
