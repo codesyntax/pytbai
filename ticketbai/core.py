@@ -1,5 +1,8 @@
 from datetime import datetime
 import json
+from ticketbai.utils.xml import build_xml, sign_xml, validate_xml
+from ticketbai.utils.crypto import get_keycert_from_p12
+
 
 TICKETBAI_ACTUAL_VERSION = "1.2"
 
@@ -60,6 +63,10 @@ class Invoice:
         self.substitution = substitution or "N"
         self.transaction_date = now.date()
         self.vat_regime = vat_regime or "01"
+        self.vat_base = 0
+        self.vat_type = 21
+        self.vat_qty = 0
+        self.vat_operations = "N"
         self.lines = []
 
     def get_lines(self):
@@ -68,6 +75,11 @@ class Invoice:
     def get_total_amount(self):
         lines = self.get_lines()
         return sum([line.total for line in lines])
+
+    def set_vat(self):
+        # This has to be changed in order to take a count multiple vat types
+        self.vat_base = self.get_total_amount()
+        self.vat_qty = self.vat_base * (self.vat_type / 100)
 
     def create_line(self, description, quantity=0, unit_import=0, discount=0):
         line = InvoiceLine(description, quantity, unit_import, discount)
@@ -110,3 +122,10 @@ class TBai:
             simplified,
         )
         return self.invoice
+
+    def sign_and_send(self, p12_path, password):
+        xml = build_xml(self)
+        key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
+        signed_xml = sign_xml(xml, key, cert)
+        validate_xml(signed_xml)
+        print("Invoice XML created, validated and sent!")

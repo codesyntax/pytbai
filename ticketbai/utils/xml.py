@@ -3,6 +3,15 @@ from xml.dom.minidom import parseString
 import os
 import ticketbai
 from string import Template
+from signxml import DigestAlgorithm
+from signxml.xades import (
+    XAdESSigner,
+    XAdESVerifier,
+    XAdESVerifyResult,
+    XAdESSignaturePolicy,
+    XAdESDataObjectFormat,
+)
+from lxml import etree
 
 
 def build_xml(tbai):
@@ -23,9 +32,9 @@ def build_xml(tbai):
         simplified=tbai.invoice.simplified,
         substitution=tbai.invoice.substitution,
         vat_regime=tbai.invoice.vat_regime,
-        expedition_date=tbai.invoice.expedition_date.strftime("%Y-%m-%d"),
+        expedition_date=tbai.invoice.expedition_date.strftime("%d-%m-%Y"),
         expedition_time=tbai.invoice.expedition_time.strftime("%H:%M:%S"),
-        transaction_date=tbai.invoice.transaction_date.strftime("%Y-%m-%d"),
+        transaction_date=tbai.invoice.transaction_date.strftime("%d-%m-%Y"),
         license=tbai.software.license,
         dev_entity=tbai.software.dev_entity,
         soft_name=tbai.software.soft_name,
@@ -49,14 +58,37 @@ def build_xml(tbai):
         total_xml.text = str(line.total)
     total_root = root.find(".//ImporteTotalFactura")
     total_root.text = str(tbai.invoice.get_total_amount())
+    return root
 
-    data = ET.tostring(root)
-    return "\n".join(
-        [
-            line
-            for line in parseString(data)
-            .toprettyxml(indent=" " * 2)
-            .split("\n")
-            if line.strip()
-        ]
+
+def validate_xml(xml):
+    path = os.path.dirname(ticketbai.__file__)
+    xsd_file = os.path.join(path, "templates/XSD/ticketBaiV1-2-1.xsd")
+    with open(xsd_file, "r") as file:
+        xmlschema_doc = etree.parse(file)
+        xmlschema = etree.XMLSchema(xmlschema_doc)
+        try:
+            xmlschema.assert_(xml)
+        except AssertionError as msg:
+            print(msg)
+
+
+def sign_xml(xml, key, cert):
+    signature_policy = XAdESSignaturePolicy(
+        Identifier="https://www.gipuzkoa.eus/ticketbai/sinadura",
+        Description="",
+        DigestMethod=DigestAlgorithm.SHA256,
+        DigestValue="vSe1CH7eAFVkGN0X2Y7Nl9XGUoBnziDA5BGUSsyt8mg=",
     )
+    data_object_format = XAdESDataObjectFormat(
+        Description="",
+        MimeType="text/xml",
+    )
+    signer = XAdESSigner(
+        signature_policy=signature_policy,
+        claimed_roles=["signer"],
+        data_object_format=data_object_format,
+        c14n_algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+    )
+    signed_doc = signer.sign(xml, key=key, cert=cert)
+    return signed_doc

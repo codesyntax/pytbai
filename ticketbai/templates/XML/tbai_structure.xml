@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <T:TicketBai xmlns:T="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ticketbai:emision ticketBaiV1-2-1.xsd ">
-    <Cabecera>
+   <Cabecera>
       <IDVersionTBAI>${version}</IDVersionTBAI>
    </Cabecera>
    <Sujetos>
@@ -32,10 +32,32 @@
          </Claves>
       </DatosFactura>
       <TipoDesglose>
+         <DesgloseFactura>
+            <Sujeta>
+               <NoExenta>
+                  <DetalleNoExenta>
+                     <TipoNoExenta>S1</TipoNoExenta>
+                     <DesgloseIVA>
+                        <DetalleIVA>
+                           <BaseImponible>880.0</BaseImponible>
+                           <TipoImpositivo>21.0</TipoImpositivo>
+                           <CuotaImpuesto>184.8</CuotaImpuesto>
+                           <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
+                        </DetalleIVA>
+                     </DesgloseIVA>
+                  </DetalleNoExenta>
+               </NoExenta>
+            </Sujeta>
+         </DesgloseFactura>
       </TipoDesglose>
    </Factura>
    <HuellaTBAI>
-      <EncadenamientoFacturaAnterior></EncadenamientoFacturaAnterior>
+      <EncadenamientoFacturaAnterior>
+         <SerieFacturaAnterior>TB-2021-F</SerieFacturaAnterior>
+         <NumFacturaAnterior>2</NumFacturaAnterior>
+         <FechaExpedicionFacturaAnterior>06-10-2021</FechaExpedicionFacturaAnterior>
+         <SignatureValueFirmaFacturaAnterior>VJzuyDtdogaJ7RgGvSSqpw17xj8QUVUp/9wOlWn8W+iCMRQ1u6HC+XuRkftbec/oD0ryoyp1iB1feZuR2hzEPTZIS49rv2atWlON</SignatureValueFirmaFacturaAnterior>
+      </EncadenamientoFacturaAnterior>
       <Software>
          <LicenciaTBAI>${license}</LicenciaTBAI>
          <EntidadDesarrolladora>
