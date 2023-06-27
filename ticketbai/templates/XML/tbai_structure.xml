@@ -40,12 +40,6 @@
       </TipoDesglose>
    </Factura>
    <HuellaTBAI>
-      <EncadenamientoFacturaAnterior>
-         <SerieFacturaAnterior>TB-2021-F</SerieFacturaAnterior>
-         <NumFacturaAnterior>2</NumFacturaAnterior>
-         <FechaExpedicionFacturaAnterior>06-10-2021</FechaExpedicionFacturaAnterior>
-         <SignatureValueFirmaFacturaAnterior>VJzuyDtdogaJ7RgGvSSqpw17xj8QUVUp/9wOlWn8W+iCMRQ1u6HC+XuRkftbec/oD0ryoyp1iB1feZuR2hzEPTZIS49rv2atWlON</SignatureValueFirmaFacturaAnterior>
-      </EncadenamientoFacturaAnterior>
       <Software>
          <LicenciaTBAI>${license}</LicenciaTBAI>
          <EntidadDesarrolladora>

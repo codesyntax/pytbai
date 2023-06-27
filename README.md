@@ -41,6 +41,7 @@ The `json` parameter is a previous JSON file you've created.
 - [ ] Corrected or replaced invoices
 - [ ] Tax free invoices
 - [ ] Invoices without national counterparty
+- [ ] Chaining of previous invoice
 
 ## How to contribute
 
