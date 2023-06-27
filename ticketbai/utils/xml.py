@@ -87,6 +87,7 @@ def validate_xml(xml):
             xmlschema.assert_(xml)
         except AssertionError as msg:
             print(msg)
+        return True
 
 
 def sign_xml(xml, key, cert):

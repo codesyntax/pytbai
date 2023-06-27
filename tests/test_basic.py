@@ -36,13 +36,12 @@ class BasicTestSuite(unittest.TestCase):
         tbai = TBai(CONFIG)
         invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura")
         self.assertIsNotNone(invoice)
-        self.assertIsNotNone(tbai.invoice)
-        self.assertEqual(tbai.invoice.serial_code, "TB-2021-S")
-        self.assertEqual(tbai.invoice.num, 1)
-        self.assertEqual(tbai.invoice.description, "Primera factura")
-        self.assertEqual(tbai.invoice.simplified, "N")
-        self.assertEqual(tbai.invoice.substitution, "N")
-        self.assertEqual(tbai.invoice.vat_regime, "01")
+        self.assertEqual(invoice.serial_code, "TB-2021-S")
+        self.assertEqual(invoice.num, 1)
+        self.assertEqual(invoice.description, "Primera factura")
+        self.assertEqual(invoice.simplified, "N")
+        self.assertEqual(invoice.substitution, "N")
+        self.assertEqual(invoice.vat_regime, "01")
 
     def test_create_invoice_line(self):
         tbai = TBai(CONFIG)
@@ -51,13 +50,17 @@ class BasicTestSuite(unittest.TestCase):
         invoice.create_line("Segundo producto", 2, 350)
         self.assertTrue(invoice.get_lines())
         lines = invoice.get_lines()
-        self.assertEqual(lines[0].total, 160)
-        self.assertEqual(lines[1].total, 700)
+        self.assertEqual(lines[0].vat_base, 160)
+        self.assertEqual(lines[0].total, 193.6)
+        self.assertEqual(lines[1].vat_base, 700)
+        self.assertEqual(lines[1].total, 847)
 
     def test_build_xml(self):
         tbai = TBai(CONFIG)
-        tbai.create_invoice("TB-2021-S", 1, "Primera factura")
-        xml = build_xml(tbai)
+        invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura")
+        invoice.create_line("Primer producto", 1, 200, 20)
+        invoice.create_line("Segundo producto", 2, 350)
+        xml = build_xml(tbai, invoice)
         self.assertIsNotNone(xml)
 
 
