@@ -32,6 +32,16 @@ invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura", "S")
 
 The `json` parameter is a previous JSON file you've created.
 
+## TODO
+
+- [ ] Recipient data
+- [ ] Multiple recipient data
+- [ ] Third party / Recipient's invoices
+- [ ] Corrective invoices
+- [ ] Corrected or replaced invoices
+- [ ] Tax free invoices
+- [ ] Invoices without national counterparty
+
 ## How to contribute
 
 Please read the [Code of Conduct documentation](CODE_OF_CONDUCT.md) first, then all contributions are done via Pull Requests on GitHub but don´t hesitate to open a new issue.

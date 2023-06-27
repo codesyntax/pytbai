@@ -34,19 +34,7 @@
       <TipoDesglose>
          <DesgloseFactura>
             <Sujeta>
-               <NoExenta>
-                  <DetalleNoExenta>
-                     <TipoNoExenta>S1</TipoNoExenta>
-                     <DesgloseIVA>
-                        <DetalleIVA>
-                           <BaseImponible>880.0</BaseImponible>
-                           <TipoImpositivo>21.0</TipoImpositivo>
-                           <CuotaImpuesto>184.8</CuotaImpuesto>
-                           <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
-                        </DetalleIVA>
-                     </DesgloseIVA>
-                  </DetalleNoExenta>
-               </NoExenta>
+               <NoExenta></NoExenta>
             </Sujeta>
          </DesgloseFactura>
       </TipoDesglose>

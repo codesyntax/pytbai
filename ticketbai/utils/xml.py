@@ -58,6 +58,22 @@ def build_xml(tbai):
         total_xml.text = str(line.total)
     total_root = root.find(".//ImporteTotalFactura")
     total_root.text = str(tbai.invoice.get_total_amount())
+    vat_type = root.find(".//NoExenta")
+    breakdown = tbai.invoice.get_vat_breakdown()
+    for vtype in breakdown:
+        vtype_line = ET.SubElement(vat_type, "DetalleNoExenta")
+        vbreakdown = ET.SubElement(vtype_line, "TipoNoExenta")
+        vbreakdown.text = vtype["type"]
+        vtbreak = ET.SubElement(vtype_line, "DesgloseIVA")
+        for rate in vtype["rates"].items():
+            rate_detail = ET.SubElement(vtbreak, "DetalleIVA")
+            vat_base = ET.SubElement(rate_detail, "BaseImponible")
+            vat_base.text = str(rate[1]["base"])
+            vat_rate = ET.SubElement(rate_detail, "TipoImpositivo")
+            vat_rate.text = str(rate[0])
+            vat_total = ET.SubElement(rate_detail, "CuotaImpuesto")
+            vat_total.text = str(rate[1]["total"])
+
     return root
 
 

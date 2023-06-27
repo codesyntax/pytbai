@@ -1,10 +1,17 @@
 from datetime import datetime
 import json
+from ticketbai.definitions import (
+    TICKETBAI_ACTUAL_VERSION,
+    DOCUMENTATION_URL,
+    L3,
+    L4,
+    L5,
+    L6,
+    L9,
+    L11,
+)
 from ticketbai.utils.xml import build_xml, sign_xml, validate_xml
 from ticketbai.utils.crypto import get_keycert_from_p12
-
-
-TICKETBAI_ACTUAL_VERSION = "1.2"
 
 
 class Subject:
@@ -17,8 +24,20 @@ class Subject:
     ):
         self.entity_id = entity_id
         self.name = name
-        self.multi_recipient = multi_recipient
-        self.external_invoice = external_invoice
+        if multi_recipient in L3:
+            self.multi_recipient = multi_recipient
+        else:
+            raise ValueError(
+                "Value not found in L3 options, see documentation: %s"
+                % DOCUMENTATION_URL
+            )
+        if external_invoice in L4:
+            self.external_invoice = external_invoice
+        else:
+            raise ValueError(
+                "Value not found in L4 options, see documentation: %s"
+                % DOCUMENTATION_URL
+            )
 
 
 class InvoiceLine:
@@ -28,19 +47,40 @@ class InvoiceLine:
         quantity=0,
         unit_amount=0,
         discount=0,
+        vat_rate=21,
+        vat_type=None,
     ):
         self.description = description
         self.quantity = quantity
         self.unit_amount = unit_amount
         self.discount = discount
+        self.vat_rate = vat_rate
+        if not vat_type:
+            self.vat_type = L11[0]  # 'S1'
+        elif vat_type in L11:
+            self.vat_type = vat_type
+        else:
+            raise ValueError(
+                "Value not found in L11 options, see documentation: %s"
+                % DOCUMENTATION_URL
+            )
+
+        self.set_base()
         self.set_total()
 
-    def set_total(self):
+    def set_base(self):
         line_base = round(self.quantity * self.unit_amount, 2)
         if self.discount:
-            self.total = line_base - (line_base * (self.discount / 100))
+            self.vat_base = round(
+                line_base - (line_base * (self.discount / 100)), 2
+            )
         else:
-            self.total = line_base
+            self.vat_base = line_base
+
+    def set_total(self):
+        self.total = round(
+            self.vat_base + (self.vat_base * (self.vat_rate / 100)), 2
+        )
 
 
 class Invoice:
@@ -59,14 +99,38 @@ class Invoice:
         self.description = description
         self.expedition_date = now.date()
         self.expedition_time = now.time()
-        self.simplified = simplified or "N"
-        self.substitution = substitution or "N"
         self.transaction_date = now.date()
-        self.vat_regime = vat_regime or "01"
-        self.vat_base = 0
-        self.vat_type = 21
-        self.vat_qty = 0
-        self.vat_operations = "N"
+
+        if not simplified:
+            self.simplified = L5[1]  # 'N'
+        elif simplified in L5:
+            self.simplified = simplified
+        else:
+            raise ValueError(
+                "Value not found in L5 options, see documentation: %s"
+                % DOCUMENTATION_URL
+            )
+
+        if not substitution:
+            self.substitution = L6[1]  # 'N'
+        elif substitution in L6:
+            self.substitution = substitution
+        else:
+            raise ValueError(
+                "Value not found in L6 options, see documentation: %s"
+                % DOCUMENTATION_URL
+            )
+
+        if not vat_regime:
+            self.vat_regime = L9[0]  # 'N'
+        elif vat_regime in L9:
+            self.vat_regime = vat_regime
+        else:
+            raise ValueError(
+                "Value not found in L9 options, see documentation: %s"
+                % DOCUMENTATION_URL
+            )
+
         self.lines = []
 
     def get_lines(self):
@@ -74,15 +138,47 @@ class Invoice:
 
     def get_total_amount(self):
         lines = self.get_lines()
-        return sum([line.total for line in lines])
+        return round(sum([line.total for line in lines]), 2)
 
-    def set_vat(self):
-        # This has to be changed in order to take a count multiple vat types
-        self.vat_base = self.get_total_amount()
-        self.vat_qty = self.vat_base * (self.vat_type / 100)
+    def get_vat_breakdown(self):
+        breakdown = []
+        for vat_type in L11:
+            line_types = {"type": vat_type, "rates": {}}
+            lines = [
+                line for line in self.get_lines() if line.vat_type == vat_type
+            ]
+            for line in lines:
+                if line.vat_rate in line_types["rates"]:
+                    line_types["rates"][line.vat_rate] = {
+                        "base": line_types["rates"][line.vat_rate]["base"]
+                        + line.vat_base,
+                        "total": line_types["rates"][line.vat_rate]["total"]
+                        + line.total,
+                    }
+                else:
+                    line_types["rates"].update(
+                        {
+                            line.vat_rate: {
+                                "base": line.vat_base,
+                                "total": line.total,
+                            }
+                        }
+                    )
+            breakdown.append(line_types)
+        return breakdown
 
-    def create_line(self, description, quantity=0, unit_import=0, discount=0):
-        line = InvoiceLine(description, quantity, unit_import, discount)
+    def create_line(
+        self,
+        description,
+        quantity=0,
+        unit_import=0,
+        discount=0,
+        vat_rate=21,
+        vat_type=None,
+    ):
+        line = InvoiceLine(
+            description, quantity, unit_import, discount, vat_rate, vat_type
+        )
         self.lines.append(line)
 
     def delete_lines(self, lines):
