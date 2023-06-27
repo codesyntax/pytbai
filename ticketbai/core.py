@@ -8,6 +8,7 @@ from ticketbai.definitions import (
     L5,
     L6,
     L9,
+    S1,
     L11,
 )
 from ticketbai.utils.xml import build_xml, sign_xml, validate_xml
@@ -56,7 +57,7 @@ class InvoiceLine:
         self.discount = discount
         self.vat_rate = vat_rate
         if not vat_type:
-            self.vat_type = L11[0]  # 'S1'
+            self.vat_type = S1
         elif vat_type in L11:
             self.vat_type = vat_type
         else:
@@ -207,20 +208,18 @@ class TBai:
         self.version = version
         self.subject = Subject(**config["subject"])
         self.software = Software(**config["software"])
-        self.invoice = None
-        self.signature = None
 
     def create_invoice(self, serial_code, num, description, simplified=None):
-        self.invoice = Invoice(
+        invoice = Invoice(
             serial_code,
             num,
             description,
             simplified,
         )
-        return self.invoice
+        return invoice
 
-    def sign_and_send(self, p12_path, password):
-        xml = build_xml(self)
+    def sign_and_send(self, invoice, p12_path, password):
+        xml = build_xml(self, invoice)
         key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         signed_xml = sign_xml(xml, key, cert)
         validate_xml(signed_xml)

@@ -14,7 +14,7 @@ from signxml.xades import (
 from lxml import etree
 
 
-def build_xml(tbai):
+def build_xml(tbai, invoice):
     path = os.path.dirname(ticketbai.__file__)
     structure_file = os.path.join(path, "templates/XML/tbai_structure.xml")
     with open(structure_file, "r") as file:
@@ -26,22 +26,22 @@ def build_xml(tbai):
         name=tbai.subject.name,
         multi_recipient=tbai.subject.multi_recipient,
         external_invoice=tbai.subject.external_invoice,
-        serial_code=tbai.invoice.serial_code,
-        num=tbai.invoice.num,
-        description=tbai.invoice.description,
-        simplified=tbai.invoice.simplified,
-        substitution=tbai.invoice.substitution,
-        vat_regime=tbai.invoice.vat_regime,
-        expedition_date=tbai.invoice.expedition_date.strftime("%d-%m-%Y"),
-        expedition_time=tbai.invoice.expedition_time.strftime("%H:%M:%S"),
-        transaction_date=tbai.invoice.transaction_date.strftime("%d-%m-%Y"),
+        serial_code=invoice.serial_code,
+        num=invoice.num,
+        description=invoice.description,
+        simplified=invoice.simplified,
+        substitution=invoice.substitution,
+        vat_regime=invoice.vat_regime,
+        expedition_date=invoice.expedition_date.strftime("%d-%m-%Y"),
+        expedition_time=invoice.expedition_time.strftime("%H:%M:%S"),
+        transaction_date=invoice.transaction_date.strftime("%d-%m-%Y"),
         license=tbai.software.license,
         dev_entity=tbai.software.dev_entity,
         soft_name=tbai.software.soft_name,
         soft_version=tbai.software.soft_version,
     )
     root = ET.fromstring(xml)
-    lines = tbai.invoice.get_lines()
+    lines = invoice.get_lines()
     lines_root = root.find(".//DetallesFactura")
     for line in lines:
         line_xml = ET.SubElement(lines_root, "IDDetalleFactura")
@@ -57,9 +57,9 @@ def build_xml(tbai):
         total_xml = ET.SubElement(line_xml, "ImporteTotal")
         total_xml.text = str(line.total)
     total_root = root.find(".//ImporteTotalFactura")
-    total_root.text = str(tbai.invoice.get_total_amount())
+    total_root.text = str(invoice.get_total_amount())
     vat_type = root.find(".//NoExenta")
-    breakdown = tbai.invoice.get_vat_breakdown()
+    breakdown = invoice.get_vat_breakdown()
     for vtype in breakdown:
         vtype_line = ET.SubElement(vat_type, "DetalleNoExenta")
         vbreakdown = ET.SubElement(vtype_line, "TipoNoExenta")

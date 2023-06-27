@@ -25,7 +25,7 @@ L6 = [
     "N",  # Ez
 ]
 
-# EZaren eta zerga garrantzia duten eragiketen erregimen bereziko gakoa
+# BEZaren eta zerga garrantzia duten eragiketen erregimen bereziko gakoa
 L9 = [
     "01",  # Erregimen orokorreko eragiketa eta hurrengo balioetan jaso gabe dagoen beste edozein kasu
     "02",  # Esportazioa
@@ -49,8 +49,10 @@ L9 = [
     "53",  # BEZaren ondorioetarako enpresari edo profesionaltzat jotzen ez diren pertsona edo entitateek egindako eragiketak
 ]
 
+
 # Salbuetsi gabeko eragiketaren mota
+S1 = "S1"
 L11 = [
-    "S1",  # Subjektu pasiboaren inbertsiorik gabe
+    S1,  # Subjektu pasiboaren inbertsiorik gabe
     "S2",  # Subjektu pasiboaren inbertsioarekin
 ]
