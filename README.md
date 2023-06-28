@@ -28,9 +28,18 @@ from ticketbai import TBai
 
 tbai = TBai(json)
 invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura", "S")
+
+invoice.create_line("Primer producto", 1, 200, 20)
+invoice.create_line("Segundo producto", 2, 350)
 ```
 
 The `json` parameter is a previous JSON file you've created.
+
+Finally sign and send the invoice:
+
+```python
+tbai_kode = tbai.sign_and_send(cert_file.p12, "password")
+```
 
 ## TODO
 
