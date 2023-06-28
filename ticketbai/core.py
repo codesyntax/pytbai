@@ -1,8 +1,15 @@
 from datetime import datetime
 import json
+import requests
+from lxml import etree
 from ticketbai.definitions import (
     TICKETBAI_ACTUAL_VERSION,
     DOCUMENTATION_URL,
+    AUTHORITY_APIS,
+    GIPUZKOA,
+    DEFAULT_VAT_RATE,
+    DEFAULT_VAT,
+    N,
     L3,
     L4,
     L5,
@@ -13,6 +20,7 @@ from ticketbai.definitions import (
 )
 from ticketbai.utils.xml import build_xml, sign_xml, validate_xml
 from ticketbai.utils.crypto import get_keycert_from_p12
+from ticketbai.utils.pdf import build_pdf
 
 
 class Subject:
@@ -20,11 +28,20 @@ class Subject:
         self,
         entity_id,
         name,
-        multi_recipient="N",
-        external_invoice="N",
+        territory=GIPUZKOA,
+        multi_recipient=N,
+        external_invoice=N,
     ):
         self.entity_id = entity_id
         self.name = name
+        if not territory:
+            self.authority_api = GIPUZKOA
+        elif territory in AUTHORITY_APIS:
+            self.authority_api = AUTHORITY_APIS[territory]
+        else:
+            raise ValueError(
+                "Not a valid territory. Options are: Araba, Bizkaia, Gipuzkoa."
+            )
         if multi_recipient in L3:
             self.multi_recipient = multi_recipient
         else:
@@ -48,7 +65,7 @@ class InvoiceLine:
         quantity=0,
         unit_amount=0,
         discount=0,
-        vat_rate=21,
+        vat_rate=DEFAULT_VAT_RATE,
         vat_type=None,
     ):
         self.description = description
@@ -103,7 +120,7 @@ class Invoice:
         self.transaction_date = now.date()
 
         if not simplified:
-            self.simplified = L5[1]  # 'N'
+            self.simplified = N
         elif simplified in L5:
             self.simplified = simplified
         else:
@@ -113,7 +130,7 @@ class Invoice:
             )
 
         if not substitution:
-            self.substitution = L6[1]  # 'N'
+            self.substitution = N
         elif substitution in L6:
             self.substitution = substitution
         else:
@@ -123,7 +140,7 @@ class Invoice:
             )
 
         if not vat_regime:
-            self.vat_regime = L9[0]  # 'N'
+            self.vat_regime = DEFAULT_VAT
         elif vat_regime in L9:
             self.vat_regime = vat_regime
         else:
@@ -223,4 +240,21 @@ class TBai:
         key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         signed_xml = sign_xml(xml, key, cert)
         validate_xml(signed_xml)
-        print("Invoice XML created, validated and sent!")
+
+        # headers = {"Content-Type": "application/xml"}
+        # response = requests.post(
+        #     url=self.subject.authority_api,
+        #     headers=headers,
+        #     data=etree.tostring(signed_xml),
+        #     cert=(cert, key),
+        # )
+
+        # if response.status_code == 200:
+        #     response_xml = etree.fromstring(response.content)
+        #     tbai_ID = response_xml.find(".//IdentificadorTBAI")
+        #     return tbai_ID
+        # return None
+        return ("TBAI-00000006Y-251019-btFpwP8dcLGAF-237", signed_xml)
+
+    def create_tbai_pdf(self, invoice, tbai_id):
+        build_pdf(invoice, tbai_id)

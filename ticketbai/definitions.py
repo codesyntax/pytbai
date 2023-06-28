@@ -1,10 +1,22 @@
 TICKETBAI_ACTUAL_VERSION = "1.2"
 DOCUMENTATION_URL = "https://www.gipuzkoa.eus/eu/web/ogasuna/ticketbai/dokumentazioa-eta-araudia"
 
+DEFAULT_VAT_RATE = 21
+
+GIPUZKOA = "Gipuzkoa"
+AUTHORITY_APIS = {
+    "Araba": "",
+    "Bizkaia": "",
+    GIPUZKOA: "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
+}
+
+S = "S"  # Bai
+N = "N"  # Ez
+
 # Hainbat hartzaile
 L3 = [
-    "S",  # Bai
-    "N",  # Ez
+    S,
+    N,
 ]
 
 L4 = [
@@ -15,19 +27,20 @@ L4 = [
 
 # Faktura sinplifikatua
 L5 = [
-    "S",  # Bai
-    "N",  # Ez
+    S,
+    N,
 ]
 
 # Faktura sinplifikatuaren ordez egindako faktura
 L6 = [
-    "S",  # Bai
-    "N",  # Ez
+    S,
+    N,
 ]
 
+DEFAULT_VAT = "01"
 # BEZaren eta zerga garrantzia duten eragiketen erregimen bereziko gakoa
 L9 = [
-    "01",  # Erregimen orokorreko eragiketa eta hurrengo balioetan jaso gabe dagoen beste edozein kasu
+    DEFAULT_VAT,  # Erregimen orokorreko eragiketa eta hurrengo balioetan jaso gabe dagoen beste edozein kasu
     "02",  # Esportazioa
     "03",  # Erabilitako ondasunen, arte objektuen, zaharkinen eta bilduma objektuen araudi berezia aplikatzen zaien eragiketak
     "04",  # Inbertsio urrearen erregimen berezia

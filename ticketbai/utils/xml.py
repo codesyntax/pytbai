@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from xml.dom.minidom import parseString
+from lxml import etree
 import os
 import ticketbai
 from string import Template
@@ -11,7 +11,6 @@ from signxml.xades import (
     XAdESSignaturePolicy,
     XAdESDataObjectFormat,
 )
-from lxml import etree
 
 
 def build_xml(tbai, invoice):
