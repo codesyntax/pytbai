@@ -1,5 +1,3 @@
-nose
-sphinx
 requests
 qrcode
 weasyprint
