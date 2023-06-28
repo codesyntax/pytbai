@@ -241,20 +241,20 @@ class TBai:
         signed_xml = sign_xml(xml, key, cert)
         validate_xml(signed_xml)
 
-        # headers = {"Content-Type": "application/xml"}
-        # response = requests.post(
-        #     url=self.subject.authority_api,
-        #     headers=headers,
-        #     data=etree.tostring(signed_xml),
-        #     cert=(cert, key),
-        # )
+        headers = {"Content-Type": "application/xml"}
+        response = requests.post(
+            url=self.subject.authority_api,
+            headers=headers,
+            data=etree.tostring(signed_xml),
+            cert=(cert, key),
+        )
 
-        # if response.status_code == 200:
-        #     response_xml = etree.fromstring(response.content)
-        #     tbai_ID = response_xml.find(".//IdentificadorTBAI")
-        #     return tbai_ID
-        # return None
-        return ("TBAI-00000006Y-251019-btFpwP8dcLGAF-237", signed_xml)
+        if response.status_code == 200:
+            response_xml = etree.fromstring(response.content)
+            tbai_ID = response_xml.find(".//IdentificadorTBAI")
+            return (tbai_ID, signed_xml)
+        return None
+        # return ("TBAI-00000006Y-251019-btFpwP8dcLGAF-237", signed_xml)
 
     def create_tbai_pdf(self, invoice, tbai_id):
-        build_pdf(invoice, tbai_id)
+        return build_pdf(invoice, tbai_id)

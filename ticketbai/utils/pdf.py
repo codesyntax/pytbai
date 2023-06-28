@@ -22,7 +22,7 @@ def get_html_string(invoice, tbai_id):
     return temp.substitute(tbai_id=tbai_id)
 
 
-def build_pdf(pdf_path, invoice, tbai_id):
+def build_pdf(invoice, tbai_id):
     css = CSS(string=get_css_string())
     html = HTML(string=get_html_string(invoice, tbai_id))
-    return html.write_pdf(stylesheets=css)
+    return html.write_pdf(stylesheets=[css])
