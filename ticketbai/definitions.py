@@ -7,7 +7,10 @@ GIPUZKOA = "Gipuzkoa"
 AUTHORITY_APIS = {
     "Araba": "",
     "Bizkaia": "",
-    GIPUZKOA: "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
+    GIPUZKOA: {
+        "invoice": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
+        "qr": "https://tbai.egoitza.gipuzkoa.eus/qr",
+    },
 }
 
 S = "S"  # Bai

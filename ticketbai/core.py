@@ -35,9 +35,11 @@ class Subject:
         self.entity_id = entity_id
         self.name = name
         if not territory:
-            self.authority_api = GIPUZKOA
+            self.authority_api = GIPUZKOA["invoice"]
+            self.qr_api = GIPUZKOA["qr"]
         elif territory in AUTHORITY_APIS:
-            self.authority_api = AUTHORITY_APIS[territory]
+            self.authority_api = AUTHORITY_APIS[territory]["invoice"]
+            self.qr_api = AUTHORITY_APIS[territory]["qr"]
         else:
             raise ValueError(
                 "Not a valid territory. Options are: Araba, Bizkaia, Gipuzkoa."
@@ -73,6 +75,7 @@ class InvoiceLine:
         self.unit_amount = unit_amount
         self.discount = discount
         self.vat_rate = vat_rate
+        self.vat_fee = None
         if not vat_type:
             self.vat_type = S1
         elif vat_type in L11:
@@ -84,21 +87,29 @@ class InvoiceLine:
             )
 
         self.set_base()
+        self.set_vat_fee()
         self.set_total()
 
+    def get_line_base(self):
+        return round(self.quantity * self.unit_amount, 2)
+
+    def get_discount_qty(self, line_base):
+        return line_base * (self.discount / 100)
+
     def set_base(self):
-        line_base = round(self.quantity * self.unit_amount, 2)
+        line_base = self.get_line_base()
         if self.discount:
             self.vat_base = round(
-                line_base - (line_base * (self.discount / 100)), 2
+                line_base - self.get_discount_qty(line_base), 2
             )
         else:
             self.vat_base = line_base
 
+    def set_vat_fee(self):
+        self.vat_fee = round(self.vat_base * (self.vat_rate / 100), 2)
+
     def set_total(self):
-        self.total = round(
-            self.vat_base + (self.vat_base * (self.vat_rate / 100)), 2
-        )
+        self.total = round(self.vat_base + self.vat_fee, 2)
 
 
 class Invoice:
@@ -161,28 +172,29 @@ class Invoice:
     def get_vat_breakdown(self):
         breakdown = []
         for vat_type in L11:
-            line_types = {"type": vat_type, "rates": {}}
             lines = [
                 line for line in self.get_lines() if line.vat_type == vat_type
             ]
-            for line in lines:
-                if line.vat_rate in line_types["rates"]:
-                    line_types["rates"][line.vat_rate] = {
-                        "base": line_types["rates"][line.vat_rate]["base"]
-                        + line.vat_base,
-                        "total": line_types["rates"][line.vat_rate]["total"]
-                        + line.total,
-                    }
-                else:
-                    line_types["rates"].update(
-                        {
-                            line.vat_rate: {
-                                "base": line.vat_base,
-                                "total": line.total,
-                            }
+            if lines:
+                line_types = {"type": vat_type, "rates": {}}
+                for line in lines:
+                    if line.vat_rate in line_types["rates"]:
+                        line_types["rates"][line.vat_rate] = {
+                            "base": line_types["rates"][line.vat_rate]["base"]
+                            + line.vat_base,
+                            "fee": line_types["rates"][line.vat_rate]["fee"]
+                            + line.vat_fee,
                         }
-                    )
-            breakdown.append(line_types)
+                    else:
+                        line_types["rates"].update(
+                            {
+                                line.vat_rate: {
+                                    "base": line.vat_base,
+                                    "fee": line.vat_fee,
+                                }
+                            }
+                        )
+                breakdown.append(line_types)
         return breakdown
 
     def create_line(
@@ -191,8 +203,8 @@ class Invoice:
         quantity=0,
         unit_import=0,
         discount=0,
-        vat_rate=21,
-        vat_type=None,
+        vat_rate=DEFAULT_VAT_RATE,
+        vat_type=S1,
     ):
         line = InvoiceLine(
             description, quantity, unit_import, discount, vat_rate, vat_type
@@ -241,20 +253,30 @@ class TBai:
         signed_xml = sign_xml(xml, key, cert)
         validate_xml(signed_xml)
 
+        key_file = open("/tmp/key.pem", "wb")
+        key_file.write(key)
+        key_file.close()
+
+        cert_file = open("/tmp/cert.pem", "wb")
+        cert_file.write(cert)
+        cert_file.close()
+
         headers = {"Content-Type": "application/xml"}
         response = requests.post(
             url=self.subject.authority_api,
             headers=headers,
             data=etree.tostring(signed_xml),
-            cert=(cert, key),
+            cert=(cert_file.name, key_file.name),
         )
 
         if response.status_code == 200:
             response_xml = etree.fromstring(response.content)
-            tbai_ID = response_xml.find(".//IdentificadorTBAI")
+            state = response_xml.find(".//Estado").text
+            if state == "01":
+                return (None, response_xml)
+            tbai_ID = response_xml.find(".//IdentificadorTBAI").text
             return (tbai_ID, signed_xml)
-        return None
-        # return ("TBAI-00000006Y-251019-btFpwP8dcLGAF-237", signed_xml)
+        return (None, None)
 
     def create_tbai_pdf(self, invoice, tbai_id):
-        return build_pdf(invoice, tbai_id)
+        return build_pdf(invoice, tbai_id, self.subject)

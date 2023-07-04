@@ -51,8 +51,9 @@ def build_xml(tbai, invoice):
         unit_amount_xml = ET.SubElement(line_xml, "ImporteUnitario")
         unit_amount_xml.text = str(line.unit_amount)
         if line.discount:
+            line_base = line.get_line_base()
             discount_xml = ET.SubElement(line_xml, "Descuento")
-            discount_xml.text = str(line.discount)
+            discount_xml.text = str(line.get_discount_qty(line_base))
         total_xml = ET.SubElement(line_xml, "ImporteTotal")
         total_xml.text = str(line.total)
     total_root = root.find(".//ImporteTotalFactura")
@@ -69,9 +70,9 @@ def build_xml(tbai, invoice):
             vat_base = ET.SubElement(rate_detail, "BaseImponible")
             vat_base.text = str(rate[1]["base"])
             vat_rate = ET.SubElement(rate_detail, "TipoImpositivo")
-            vat_rate.text = str(rate[0])
-            vat_total = ET.SubElement(rate_detail, "CuotaImpuesto")
-            vat_total.text = str(rate[1]["total"])
+            vat_rate.text = str(float(rate[0]))
+            vat_fee = ET.SubElement(rate_detail, "CuotaImpuesto")
+            vat_fee.text = str(rate[1]["fee"])
 
     return root
 

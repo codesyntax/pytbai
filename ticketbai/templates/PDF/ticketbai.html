@@ -2,17 +2,47 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="utf-8"> <!-- utf-8 works for most cases -->
-    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
-    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-    <title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
-
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
 </head>
 
 <body>
-	<center style="background-color: #f1f1f1;">
-        <p>${tbai_id}</p>
+    <center>
+        <p style="font-size: 8pt;">
+            ${subject_info}
+        </p>
+
+    </center>
+    <hr>
+    <span>${date} - ${hour}</span>
+    <span class="right">Faktura sinp.: ${serial_code}/${num}</span>
+    <hr>
+    <table style="font-size: 6pt;">
+        <tr>
+            <th>Kop.</th>
+            <th>Deskribapena</th>
+            <th>Unitatea</th>
+            <th>Guztira</th>
+        </tr>
+        <tr class="invoice_lines">
+        </tr>
+    </table>
+    <hr>
+    <div style="font-size: 10pt;">
+    <span><strong>Guztira BEZ barne</strong></span><span class="right"><strong>${invoice_total} €</strong></span>
+    </div>
+    </br>
+    </br>
+    <p>
+        <span>BEZ<span>
+
+    </p>
+    <hr>
+    <center style="font-size: 9pt;">
+        <strong>ESKERRIK ASKO</strong>
+    </center>
+    <hr>
+    <center>
+        <p><strong style="font-size: 7pt;">${tbai_id}</strong></p>
+        <img src="data:image/jpeg;base64,${qrcode}"/>
     </center>
 </body>
 </html>

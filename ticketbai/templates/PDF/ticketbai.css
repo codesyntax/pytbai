@@ -1,4 +1,13 @@
 @page {
-  size: Letter; /* Change from the default size of A4 */
-  margin: 3cm; /* Set margin on each page */
+  size: 78mm 170mm;
+  margin: 3mm;
+}
+
+body {
+  margin-top: 15mm;
+  font-size: 7pt;
+}
+
+.right {
+  float: right;
 }
