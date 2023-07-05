@@ -17,6 +17,7 @@ setup(
         " Basque tax authorities"
     ),
     long_description=readme,
+    long_description_content_type="text/markdown",
     author="Urtzi Odriozola",
     author_email="uodriozola@codesyntax.com",
     url="https://github.com/codesyntax/pytbai",
