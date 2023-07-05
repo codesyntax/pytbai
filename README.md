@@ -1,3 +1,5 @@
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/codesyntax/pytbai/python-package.yml)
+
 # pytbai
 
 pytbai allows to create, manage and send TicketBai invoices to the Basque tax authorities.
