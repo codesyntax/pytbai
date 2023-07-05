@@ -7,3 +7,5 @@ recursive-include pytbai *.html
 recursive-include pytbai *.xml
 recursive-include pytbai *.xsd
 recursive-include tests *.py
+recursive-include tests *.p12
+recursive-include tests *.pem
