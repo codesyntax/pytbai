@@ -1,5 +1,5 @@
 import os
-import ticketbai
+import pytbai
 import qrcode
 import base64
 from io import BytesIO
@@ -7,7 +7,7 @@ from string import Template
 from requests.models import PreparedRequest
 from weasyprint import HTML, CSS
 
-TEMPLATES_PATH = os.path.join(os.path.dirname(ticketbai.__file__), "templates")
+TEMPLATES_PATH = os.path.join(os.path.dirname(pytbai.__file__), "templates")
 
 
 def create_qr_base64(invoice, tbai_id, subject):

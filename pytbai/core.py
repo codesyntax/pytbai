@@ -1,8 +1,10 @@
 from datetime import datetime
+import tempfile
 import json
 import requests
+import logging
 from lxml import etree
-from ticketbai.definitions import (
+from pytbai.definitions import (
     TICKETBAI_ACTUAL_VERSION,
     DOCUMENTATION_URL,
     AUTHORITY_APIS,
@@ -18,9 +20,11 @@ from ticketbai.definitions import (
     S1,
     L11,
 )
-from ticketbai.utils.xml import build_xml, sign_xml, validate_xml
-from ticketbai.utils.crypto import get_keycert_from_p12
-from ticketbai.utils.pdf import build_pdf
+from pytbai.utils.xml import build_xml, sign_xml, validate_xml
+from pytbai.utils.crypto import get_keycert_from_p12
+from pytbai.utils.pdf import build_pdf
+
+logger = logging.getLogger("pytbai")
 
 
 class Subject:
@@ -251,31 +255,36 @@ class TBai:
         xml = build_xml(self, invoice)
         key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         signed_xml = sign_xml(xml, key, cert)
-        validate_xml(signed_xml)
+        if not validate_xml(signed_xml):
+            return (None, None)
 
-        key_file = open("/tmp/key.pem", "wb")
+        key_file = tempfile.NamedTemporaryFile()
         key_file.write(key)
-        key_file.close()
-
-        cert_file = open("/tmp/cert.pem", "wb")
+        cert_file = tempfile.NamedTemporaryFile()
         cert_file.write(cert)
-        cert_file.close()
 
         headers = {"Content-Type": "application/xml"}
+
+        # TODO: Error handling for timeout
         response = requests.post(
             url=self.subject.authority_api,
             headers=headers,
             data=etree.tostring(signed_xml),
             cert=(cert_file.name, key_file.name),
+            timeout=5,
         )
+        key_file.close()
+        cert_file.close()
 
-        if response.status_code == 200:
+        if response.ok:
             response_xml = etree.fromstring(response.content)
             state = response_xml.find(".//Estado").text
             if state == "01":
+                logger.error("XML not accepted")
                 return (None, response_xml)
             tbai_ID = response_xml.find(".//IdentificadorTBAI").text
             return (tbai_ID, signed_xml)
+        logger.error("API connection error")
         return (None, None)
 
     def create_tbai_pdf(self, invoice, tbai_id):

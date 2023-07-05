@@ -1,7 +1,8 @@
 import xml.etree.ElementTree as ET
 from lxml import etree
 import os
-import ticketbai
+import logging
+import pytbai
 from string import Template
 from signxml import DigestAlgorithm
 from signxml.xades import (
@@ -12,9 +13,11 @@ from signxml.xades import (
     XAdESDataObjectFormat,
 )
 
+logger = logging.getLogger("pytbai")
+
 
 def build_xml(tbai, invoice):
-    path = os.path.dirname(ticketbai.__file__)
+    path = os.path.dirname(pytbai.__file__)
     structure_file = os.path.join(path, "templates/XML/tbai_structure.xml")
     with open(structure_file, "r") as file:
         template = file.read()
@@ -78,7 +81,7 @@ def build_xml(tbai, invoice):
 
 
 def validate_xml(xml):
-    path = os.path.dirname(ticketbai.__file__)
+    path = os.path.dirname(pytbai.__file__)
     xsd_file = os.path.join(path, "templates/XSD/ticketBaiV1-2-1.xsd")
     with open(xsd_file, "r") as file:
         xmlschema_doc = etree.parse(file)
@@ -86,7 +89,8 @@ def validate_xml(xml):
         try:
             xmlschema.assert_(xml)
         except AssertionError as msg:
-            print(msg)
+            logger.error(msg)
+            return False
         return True
 
 

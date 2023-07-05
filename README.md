@@ -1,6 +1,6 @@
-# TicketBai
+# pytbai
 
-TicketBai allows to create, manage and send TicketBai invoices to the Basque tax authorities.
+pytbai allows to create, manage and send TicketBai invoices to the Basque tax authorities.
 
 ## Usage
 
@@ -24,7 +24,7 @@ You need to configure your bussiness and software info in a JSON file:
 Then create a invoice:
 
 ```python
-from ticketbai import TBai
+from pytbai import TBai
 
 tbai = TBai(json)
 invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura", "S")

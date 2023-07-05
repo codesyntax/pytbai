@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ticketbai import TBai
-from ticketbai.utils.xml import build_xml
+from pytbai import TBai
+from pytbai.utils.xml import build_xml
 import unittest
 
 CONFIG = {
