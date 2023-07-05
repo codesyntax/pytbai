@@ -3,7 +3,10 @@ import tempfile
 import json
 import requests
 import logging
+from decimal import Decimal
 from lxml import etree
+from json import JSONEncoder
+from decimal import Decimal
 from pytbai.definitions import (
     TICKETBAI_ACTUAL_VERSION,
     DOCUMENTATION_URL,
@@ -63,6 +66,9 @@ class Subject:
                 % DOCUMENTATION_URL
             )
 
+    def get_dict(self):
+        return self.__dict__
+
 
 class InvoiceLine:
     def __init__(
@@ -95,25 +101,29 @@ class InvoiceLine:
         self.set_total()
 
     def get_line_base(self):
-        return round(self.quantity * self.unit_amount, 2)
+        line_base = self.quantity * self.unit_amount
+        return line_base.quantize(Decimal("0.00"))
 
     def get_discount_qty(self, line_base):
-        return line_base * (self.discount / 100)
+        discount_qty = line_base * (self.discount / 100)
+        return discount_qty.quantize(Decimal("0.00"))
 
     def set_base(self):
         line_base = self.get_line_base()
         if self.discount:
-            self.vat_base = round(
-                line_base - self.get_discount_qty(line_base), 2
-            )
+            self.vat_base = line_base - self.get_discount_qty(line_base)
         else:
             self.vat_base = line_base
 
     def set_vat_fee(self):
-        self.vat_fee = round(self.vat_base * (self.vat_rate / 100), 2)
+        vat_fee = self.vat_base * (self.vat_rate / 100)
+        self.vat_fee = vat_fee.quantize(Decimal("0.00"))
 
     def set_total(self):
-        self.total = round(self.vat_base + self.vat_fee, 2)
+        self.total = self.vat_base + self.vat_fee
+
+    def get_dict(self):
+        return self.__dict__
 
 
 class Invoice:
@@ -125,14 +135,23 @@ class Invoice:
         simplified=None,
         substitution=None,
         vat_regime=None,
+        expedition_date=None,
+        expedition_time=None,
+        transaction_date=None,
     ):
-        now = datetime.now()
+
         self.serial_code = serial_code
         self.num = num
         self.description = description
-        self.expedition_date = now.date()
-        self.expedition_time = now.time()
-        self.transaction_date = now.date()
+        self.expedition_date = (
+            expedition_date or datetime.now().date().isoformat()
+        )
+        self.expedition_time = (
+            expedition_time or datetime.now().time().strftime("%H:%M:%S")
+        )
+        self.transaction_date = (
+            transaction_date or datetime.now().date().isoformat()
+        )
 
         if not simplified:
             self.simplified = N
@@ -171,7 +190,8 @@ class Invoice:
 
     def get_total_amount(self):
         lines = self.get_lines()
-        return round(sum([line.total for line in lines]), 2)
+        total = sum([line.total for line in lines])
+        return total.quantize(Decimal("0.00"))
 
     def get_vat_breakdown(self):
         breakdown = []
@@ -211,7 +231,12 @@ class Invoice:
         vat_type=S1,
     ):
         line = InvoiceLine(
-            description, quantity, unit_import, discount, vat_rate, vat_type
+            description,
+            quantity,
+            unit_import,
+            discount,
+            vat_rate,
+            vat_type,
         )
         self.lines.append(line)
 
@@ -220,6 +245,14 @@ class Invoice:
         for line in lines:
             curr_lines.remove(line)
         self.lines = curr_lines
+
+    def get_dict(self):
+        invoice_json = self.__dict__
+        lines_json = []
+        for line in invoice_json["lines"]:
+            lines_json.append(line.get_dict())
+        invoice_json["lines"] = lines_json
+        return invoice_json
 
 
 class Software:
@@ -235,6 +268,16 @@ class Software:
         self.soft_name = soft_name
         self.soft_version = soft_version
 
+    def get_dict(self):
+        return self.__dict__
+
+
+class TBaiEncoder(JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Decimal):
+            return float(o)
+        return super().default(o)
+
 
 class TBai:
     def __init__(self, config, version=TICKETBAI_ACTUAL_VERSION):
@@ -242,12 +285,27 @@ class TBai:
         self.subject = Subject(**config["subject"])
         self.software = Software(**config["software"])
 
-    def create_invoice(self, serial_code, num, description, simplified=None):
+    def create_invoice(
+        self,
+        serial_code,
+        num,
+        description,
+        simplified=None,
+        expedition_date=None,
+        expedition_time=None,
+        transaction_date=None,
+    ):
         invoice = Invoice(
             serial_code,
             num,
             description,
-            simplified,
+            simplified=simplified,
+            expedition_date=expedition_date
+            or datetime.now().date().isoformat(),
+            expedition_time=expedition_time
+            or datetime.now().time().strftime("%H:%M:%S"),
+            transaction_date=transaction_date
+            or datetime.now().date().isoformat(),
         )
         return invoice
 
@@ -260,8 +318,10 @@ class TBai:
 
         key_file = tempfile.NamedTemporaryFile()
         key_file.write(key)
+        key_file.flush()
         cert_file = tempfile.NamedTemporaryFile()
         cert_file.write(cert)
+        cert_file.flush()
 
         headers = {"Content-Type": "application/xml"}
 
@@ -271,21 +331,41 @@ class TBai:
             headers=headers,
             data=etree.tostring(signed_xml),
             cert=(cert_file.name, key_file.name),
-            timeout=5,
         )
+
         key_file.close()
         cert_file.close()
 
+        result_json = {
+            "TBAI_ID": None,
+            "CSV": None,
+            "SignedXML": None,
+            "ResponseXML": None,
+        }
         if response.ok:
             response_xml = etree.fromstring(response.content)
             state = response_xml.find(".//Estado").text
             if state == "01":
                 logger.error("XML not accepted")
-                return (None, response_xml)
-            tbai_ID = response_xml.find(".//IdentificadorTBAI").text
-            return (tbai_ID, signed_xml)
+                result_json["ResponseXML"] = response_xml
+                return result_json
+            result_json["TBAI_ID"] = response_xml.find(
+                ".//IdentificadorTBAI"
+            ).text
+            result_json["CSV"] = response_xml.find(".//CSV").text
+            result_json["SignedXML"] = etree.tostring(signed_xml).decode(
+                "utf-8"
+            )
+            return result_json
         logger.error("API connection error")
-        return (None, None)
+        return result_json
 
-    def create_tbai_pdf(self, invoice, tbai_id):
-        return build_pdf(invoice, tbai_id, self.subject)
+    def get_json(self, invoice=None):
+        tbai_json = {"version": self.version}
+        if self.subject:
+            tbai_json["subject"] = self.subject.get_dict()
+        if invoice:
+            tbai_json["invoice"] = invoice.get_dict()
+        if self.software:
+            tbai_json["software"] = self.software.get_dict()
+        return json.dumps(tbai_json, cls=TBaiEncoder)

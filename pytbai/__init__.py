@@ -1,1 +1,1 @@
-from .core import TBai, Subject, Software
+from .core import TBai

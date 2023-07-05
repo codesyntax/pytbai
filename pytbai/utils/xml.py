@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 from lxml import etree
 import os
 import logging
+from datetime import datetime
 import pytbai
 from string import Template
 from signxml import DigestAlgorithm
@@ -22,6 +23,14 @@ def build_xml(tbai, invoice):
     with open(structure_file, "r") as file:
         template = file.read()
     temp = Template(template)
+
+    expedition_date = datetime.strptime(
+        invoice.expedition_date, "%Y-%m-%d"
+    ).strftime("%d-%m-%Y")
+    transaction_date = datetime.strptime(
+        invoice.transaction_date, "%Y-%m-%d"
+    ).strftime("%d-%m-%Y")
+
     xml = temp.substitute(
         version=tbai.version,
         entity_id=tbai.subject.entity_id,
@@ -34,9 +43,9 @@ def build_xml(tbai, invoice):
         simplified=invoice.simplified,
         substitution=invoice.substitution,
         vat_regime=invoice.vat_regime,
-        expedition_date=invoice.expedition_date.strftime("%d-%m-%Y"),
-        expedition_time=invoice.expedition_time.strftime("%H:%M:%S"),
-        transaction_date=invoice.transaction_date.strftime("%d-%m-%Y"),
+        expedition_date=expedition_date,
+        expedition_time=invoice.expedition_time,
+        transaction_date=transaction_date,
         license=tbai.software.license,
         dev_entity=tbai.software.dev_entity,
         soft_name=tbai.software.soft_name,

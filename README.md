@@ -41,7 +41,7 @@ The `json` parameter is a previous JSON file you've created.
 Finally sign and send the invoice:
 
 ```python
-tbai_kode = tbai.sign_and_send(cert_file.p12, "password")
+tbai_code, signedxml = tbai.sign_and_send("/path_to_p12_certificate", "password")
 ```
 
 ## TODO
