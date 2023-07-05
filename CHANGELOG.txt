@@ -1,7 +1,16 @@
 1.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- include pem files for testing purpose [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+- update README [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+- get_json function + more tests [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+- pypi python versions badge [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+- add badge [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.1.1 (2023-07-05)
