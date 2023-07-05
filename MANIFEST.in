@@ -1,2 +1,9 @@
-include LICENSE
-include CODE_OF_CONDUCT.md
+include *.in
+include *.md
+include *.txt
+include Makefile
+recursive-include pytbai *.css
+recursive-include pytbai *.html
+recursive-include pytbai *.xml
+recursive-include pytbai *.xsd
+recursive-include tests *.py
