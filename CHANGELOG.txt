@@ -1,5 +1,5 @@
-1.2 (unreleased)
-----------------
+1.1.1 (2023-07-05)
+------------------
 
 - added classifiers [Urtzi Odriozola <uodriozola@codesyntax.com>]
 
