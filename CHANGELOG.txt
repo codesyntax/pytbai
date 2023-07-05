@@ -1,7 +1,8 @@
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- long description type set [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.0 (2023-07-05)
