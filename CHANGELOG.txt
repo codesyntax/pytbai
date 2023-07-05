@@ -1,4 +1,4 @@
-1.1 (unreleased)
+1.1 (2023-07-05)
 ----------------
 
 - long description type set [Urtzi Odriozola <uodriozola@codesyntax.com>]
