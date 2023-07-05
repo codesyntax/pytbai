@@ -1,7 +1,12 @@
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- added classifiers [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+- revert python-package.yml file [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+- remove some workflows [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.1 (2023-07-05)
