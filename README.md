@@ -28,12 +28,13 @@ Then create a invoice:
 
 ```python
 from pytbai import TBai
+from decimal import Decimal
 
 tbai = TBai(json)
 invoice = tbai.create_invoice("TB-2021-S", 1, "First invoice", "S")
 
-invoice.create_line("First product", 1, 200, 20)
-invoice.create_line("Second product", 2, 350)
+invoice.create_line("First product", Decimal("1"), Decimal("200"), Decimal("20"))
+invoice.create_line("Second product", Decimal("2"), Decimal("350"))
 ```
 
 The `json` parameter is a previous JSON file you've created.
@@ -41,7 +42,13 @@ The `json` parameter is a previous JSON file you've created.
 Finally sign and send the invoice:
 
 ```python
-tbai_code, signedxml = tbai.sign_and_send("/path_to_p12_certificate", "password")
+result = tbai.sign_and_send("/path_to_p12_certificate", "password")
+```
+
+You can also get the full structure of TBai invoice:
+
+```python
+json_structure = tbai.get_json(invoice)
 ```
 
 ## TODO
