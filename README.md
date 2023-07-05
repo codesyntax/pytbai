@@ -10,12 +10,12 @@ You need to configure your bussiness and software info in a JSON file:
 {
   "subject": {
     "entity_id": "99999974E",
-    "name": "REPRESENTANTESPJ FICTICIO"
+    "name": "BUSSINESS NAME"
   },
   "software": {
     "license": "TBAIGIPRE00000000501",
     "dev_entity": "P2000000F",
-    "soft_name": "FAKTURABAI",
+    "soft_name": "TBAI",
     "soft_version": "1.0"
   }
 }
@@ -27,10 +27,10 @@ Then create a invoice:
 from pytbai import TBai
 
 tbai = TBai(json)
-invoice = tbai.create_invoice("TB-2021-S", 1, "Primera factura", "S")
+invoice = tbai.create_invoice("TB-2021-S", 1, "First invoice", "S")
 
-invoice.create_line("Primer producto", 1, 200, 20)
-invoice.create_line("Segundo producto", 2, 350)
+invoice.create_line("First product", 1, 200, 20)
+invoice.create_line("Second product", 2, 350)
 ```
 
 The `json` parameter is a previous JSON file you've created.
