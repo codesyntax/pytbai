@@ -2,8 +2,6 @@ include *.in
 include *.md
 include *.txt
 include Makefile
-include pytbai/utils/*
-include pytbai/templates/*
 recursive-include pytbai *.css
 recursive-include pytbai *.html
 recursive-include pytbai *.xml

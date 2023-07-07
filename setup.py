@@ -22,7 +22,7 @@ setup(
     author_email="uodriozola@codesyntax.com",
     url="https://github.com/codesyntax/pytbai",
     license=license,
-    packages=find_packages(exclude=("tests", "docs")),
+    packages=find_packages(exclude=("tests",)),
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
