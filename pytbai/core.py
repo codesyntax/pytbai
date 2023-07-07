@@ -75,9 +75,9 @@ class InvoiceLine:
     def __init__(
         self,
         description,
-        quantity=0,
-        unit_amount=0,
-        discount=0,
+        quantity=Decimal("0"),
+        unit_amount=Decimal("0"),
+        discount=Decimal("0"),
         vat_rate=DEFAULT_VAT_RATE,
         vat_type=None,
     ):
@@ -225,9 +225,9 @@ class Invoice:
     def create_line(
         self,
         description,
-        quantity=0,
-        unit_import=0,
-        discount=0,
+        quantity=Decimal("0"),
+        unit_import=Decimal("0"),
+        discount=Decimal("0"),
         vat_rate=DEFAULT_VAT_RATE,
         vat_type=S1,
     ):
@@ -253,6 +253,7 @@ class Invoice:
         for line in invoice_json["lines"]:
             lines_json.append(line.get_dict())
         invoice_json["lines"] = lines_json
+        invoice_json["total_amount"] = self.get_total_amount()
         return invoice_json
 
 

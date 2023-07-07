@@ -37,6 +37,7 @@ TBAI_INVOICE_JSON = {
         "substitution": "N",
         "vat_regime": "01",
         "lines": [],
+        "total_amount": 0,
     },
     "software": {
         "license": "TBAIGIPRE00000000501",
@@ -90,6 +91,7 @@ TBAI_INVOICE_LINES_JSON = {
                 "total": 847.0,
             },
         ],
+        "total_amount": 1040.6,
     },
     "software": {
         "license": "TBAIGIPRE00000000501",
