@@ -191,7 +191,7 @@ class Invoice:
 
     def get_total_amount(self):
         lines = self.get_lines()
-        total = sum([line.total for line in lines])
+        total = Decimal(sum([line.total for line in lines]))
         return total.quantize(Decimal("0.00"))
 
     def get_vat_breakdown(self):
