@@ -1,4 +1,5 @@
 from datetime import datetime
+import copy
 import tempfile
 import json
 import requests
@@ -67,7 +68,7 @@ class Subject:
             )
 
     def get_dict(self):
-        return self.__dict__
+        return copy.deepcopy(self.__dict__)
 
 
 class InvoiceLine:
@@ -123,7 +124,7 @@ class InvoiceLine:
         self.total = self.vat_base + self.vat_fee
 
     def get_dict(self):
-        return self.__dict__
+        return copy.deepcopy(self.__dict__)
 
 
 class Invoice:
@@ -247,7 +248,12 @@ class Invoice:
         self.lines = curr_lines
 
     def get_dict(self):
-        return self.__dict__
+        invoice_json = copy.deepcopy(self.__dict__)
+        lines_json = []
+        for line in invoice_json["lines"]:
+            lines_json.append(line.get_dict())
+        invoice_json["lines"] = lines_json
+        return invoice_json
 
 
 class Software:
@@ -264,7 +270,7 @@ class Software:
         self.soft_version = soft_version
 
     def get_dict(self):
-        return self.__dict__
+        return copy.deepcopy(self.__dict__)
 
 
 class TBaiEncoder(JSONEncoder):
