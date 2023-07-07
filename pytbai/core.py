@@ -247,12 +247,7 @@ class Invoice:
         self.lines = curr_lines
 
     def get_dict(self):
-        invoice_json = self.__dict__
-        lines_json = []
-        for line in invoice_json["lines"]:
-            lines_json.append(line.get_dict())
-        invoice_json["lines"] = lines_json
-        return invoice_json
+        return self.__dict__
 
 
 class Software:
