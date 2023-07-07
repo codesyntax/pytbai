@@ -1,7 +1,8 @@
 1.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- package configuration [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.3.0 (2023-07-07)
