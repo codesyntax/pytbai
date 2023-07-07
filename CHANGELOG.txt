@@ -1,7 +1,8 @@
 1.3.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- xml/xsd/html/css files missing [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.3.2 (2023-07-07)
