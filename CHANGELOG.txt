@@ -1,4 +1,4 @@
-1.3.5 (unreleased)
+1.3.5 (2023-07-07)
 ------------------
 
 - fix invoice get_json by dict object copy [Urtzi Odriozola <uodriozola@codesyntax.com>]
