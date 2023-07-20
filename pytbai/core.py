@@ -349,7 +349,7 @@ class TBai:
             state = response_xml.find(".//Estado").text
             if state == "01":
                 logger.error("XML not accepted")
-                result_json["ResponseXML"] = response_xml
+                result_json["ResponseXML"] = response.content
                 return result_json
             result_json["TBAI_ID"] = response_xml.find(
                 ".//IdentificadorTBAI"
