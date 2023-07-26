@@ -12,7 +12,7 @@ AUTHORITY_APIS = {
     GIPUZKOA: {
         "DEV": {
             "invoice": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
-            "qr": "https://tbai.prep.gipuzkoa.eus/qr",
+            "qr": "https://tbai.prep.gipuzkoa.eus/qr/",
         },
         "PROD": {
             "invoice": "https://tbai.egoitza.gipuzkoa.eus/sarrerak/alta",
