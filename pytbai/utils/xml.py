@@ -17,7 +17,7 @@ from signxml.xades import (
 logger = logging.getLogger("pytbai")
 
 
-def build_xml(tbai, invoice):
+def build_xml(tbai, invoice, pre_invoice=None):
     path = os.path.dirname(pytbai.__file__)
     structure_file = os.path.join(path, "templates/XML/tbai_structure.xml")
     with open(structure_file, "r") as file:

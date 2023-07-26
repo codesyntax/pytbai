@@ -39,15 +39,16 @@ class Subject:
         territory=GIPUZKOA,
         multi_recipient=N,
         external_invoice=N,
+        env="DEV",
     ):
         self.entity_id = entity_id
         self.name = name
         if not territory:
-            self.authority_api = GIPUZKOA["invoice"]
-            self.qr_api = GIPUZKOA["qr"]
+            self.authority_api = GIPUZKOA[env]["invoice"]
+            self.qr_api = GIPUZKOA[env]["qr"]
         elif territory in AUTHORITY_APIS:
-            self.authority_api = AUTHORITY_APIS[territory]["invoice"]
-            self.qr_api = AUTHORITY_APIS[territory]["qr"]
+            self.authority_api = AUTHORITY_APIS[territory][env]["invoice"]
+            self.qr_api = AUTHORITY_APIS[territory][env]["qr"]
         else:
             raise ValueError(
                 "Not a valid territory. Options are: Araba, Bizkaia, Gipuzkoa."
@@ -282,8 +283,10 @@ class TBaiEncoder(JSONEncoder):
 
 
 class TBai:
-    def __init__(self, config, version=TICKETBAI_ACTUAL_VERSION):
+    def __init__(self, config, version=TICKETBAI_ACTUAL_VERSION, env="DEV"):
         self.version = version
+        self.env = env
+        config["subject"].update({"env": env})
         self.subject = Subject(**config["subject"])
         self.software = Software(**config["software"])
 
@@ -311,8 +314,8 @@ class TBai:
         )
         return invoice
 
-    def sign_and_send(self, invoice, p12_path, password):
-        xml = build_xml(self, invoice)
+    def sign_and_send(self, invoice, p12_path, password, pre_invoice=None):
+        xml = build_xml(self, invoice, pre_invoice)
         key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         signed_xml = sign_xml(xml, key, cert)
         if not validate_xml(signed_xml):
@@ -363,7 +366,7 @@ class TBai:
         return result_json
 
     def get_json(self, invoice=None):
-        tbai_json = {"version": self.version}
+        tbai_json = {"version": self.version, "env": self.env}
         if self.subject:
             tbai_json["subject"] = self.subject.get_dict()
         if invoice:

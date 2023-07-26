@@ -1,10 +1,11 @@
 TBAI_JSON = {
     "version": "1.2",
+    "env": "DEV",
     "subject": {
         "entity_id": "99999974E",
         "name": "REPRESENTANTESPJ FICTICIO",
         "authority_api": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
-        "qr_api": "https://tbai.egoitza.gipuzkoa.eus/qr",
+        "qr_api": "https://tbai.prep.gipuzkoa.eus/qr",
         "multi_recipient": "N",
         "external_invoice": "N",
     },
@@ -18,11 +19,12 @@ TBAI_JSON = {
 
 TBAI_INVOICE_JSON = {
     "version": "1.2",
+    "env": "DEV",
     "subject": {
         "entity_id": "99999974E",
         "name": "REPRESENTANTESPJ FICTICIO",
         "authority_api": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
-        "qr_api": "https://tbai.egoitza.gipuzkoa.eus/qr",
+        "qr_api": "https://tbai.prep.gipuzkoa.eus/qr",
         "multi_recipient": "N",
         "external_invoice": "N",
     },
@@ -49,11 +51,12 @@ TBAI_INVOICE_JSON = {
 
 TBAI_INVOICE_LINES_JSON = {
     "version": "1.2",
+    "env": "DEV",
     "subject": {
         "entity_id": "99999974E",
         "name": "REPRESENTANTESPJ FICTICIO",
         "authority_api": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
-        "qr_api": "https://tbai.egoitza.gipuzkoa.eus/qr",
+        "qr_api": "https://tbai.prep.gipuzkoa.eus/qr",
         "multi_recipient": "N",
         "external_invoice": "N",
     },
