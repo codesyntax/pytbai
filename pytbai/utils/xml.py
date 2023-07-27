@@ -86,6 +86,18 @@ def build_xml(tbai, invoice, pre_invoice=None):
             vat_fee = ET.SubElement(rate_detail, "CuotaImpuesto")
             vat_fee.text = str(rate[1]["fee"])
 
+    if pre_invoice:
+        fp_root = root.find(".//HuellaTBAI")
+        p_inv = ET.SubElement(fp_root, "EncadenamientoFacturaAnterior")
+        serial_code = ET.SubElement(p_inv, "SerieFacturaAnterior")
+        serial_code.text = pre_invoice["serial_code"]
+        num = ET.SubElement(p_inv, "NumFacturaAnterior")
+        num.text = pre_invoice["num"]
+        signature_value = ET.SubElement(
+            p_inv, "SignatureValueFirmaFacturaAnterior"
+        )
+        signature_value.text = pre_invoice["signature_value"]
+
     return root
 
 
