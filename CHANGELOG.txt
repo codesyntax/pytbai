@@ -1,4 +1,4 @@
-1.4.2 (unreleased)
+1.4.2 (2023-07-27)
 ------------------
 
 - include templates [Urtzi Odriozola <uodriozola@codesyntax.com>]
