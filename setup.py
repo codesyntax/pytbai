@@ -23,6 +23,9 @@ setup(
     url="https://github.com/codesyntax/pytbai",
     license=license,
     packages=find_packages(exclude=("tests",)),
+    package_data = {
+        'pytbai': ['templates/*'],
+    }
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
