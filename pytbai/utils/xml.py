@@ -88,7 +88,8 @@ def build_xml(tbai, invoice, pre_invoice=None):
 
     if pre_invoice:
         fp_root = root.find(".//HuellaTBAI")
-        p_inv = ET.SubElement(fp_root, "EncadenamientoFacturaAnterior")
+        p_inv = ET.Element("EncadenamientoFacturaAnterior")
+        fp_root.insert(0, p_inv)
         serial_code = ET.SubElement(p_inv, "SerieFacturaAnterior")
         serial_code.text = pre_invoice["serial_code"]
         num = ET.SubElement(p_inv, "NumFacturaAnterior")

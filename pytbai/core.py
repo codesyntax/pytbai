@@ -318,8 +318,15 @@ class TBai:
         xml = build_xml(self, invoice, pre_invoice)
         key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         signed_xml = sign_xml(xml, key, cert)
+        result_json = {
+            "TBAI_ID": None,
+            "CSV": None,
+            "SignedXML": None,
+            "ResponseXML": None,
+        }
+
         if not validate_xml(signed_xml):
-            return (None, None)
+            return result_json
 
         key_file = tempfile.NamedTemporaryFile()
         key_file.write(key)
@@ -341,12 +348,6 @@ class TBai:
         key_file.close()
         cert_file.close()
 
-        result_json = {
-            "TBAI_ID": None,
-            "CSV": None,
-            "SignedXML": None,
-            "ResponseXML": None,
-        }
         if response.ok:
             response_xml = etree.fromstring(response.content)
             state = response_xml.find(".//Estado").text
