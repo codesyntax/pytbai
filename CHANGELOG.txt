@@ -1,7 +1,8 @@
 1.4.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- xml structure [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.4.0 (2023-07-27)
