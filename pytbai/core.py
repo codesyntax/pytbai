@@ -204,17 +204,21 @@ class Invoice:
             if lines:
                 line_types = {"type": vat_type, "rates": {}}
                 for line in lines:
-                    if line.vat_rate in line_types["rates"]:
-                        line_types["rates"][line.vat_rate] = {
-                            "base": line_types["rates"][line.vat_rate]["base"]
+                    if str(line.vat_rate) in line_types["rates"]:
+                        line_types["rates"][str(line.vat_rate)] = {
+                            "base": line_types["rates"][str(line.vat_rate)][
+                                "base"
+                            ]
                             + line.vat_base,
-                            "fee": line_types["rates"][line.vat_rate]["fee"]
+                            "fee": line_types["rates"][str(line.vat_rate)][
+                                "fee"
+                            ]
                             + line.vat_fee,
                         }
                     else:
                         line_types["rates"].update(
                             {
-                                line.vat_rate: {
+                                str(line.vat_rate): {
                                     "base": line.vat_base,
                                     "fee": line.vat_fee,
                                 }
@@ -255,6 +259,7 @@ class Invoice:
             lines_json.append(line.get_dict())
         invoice_json["lines"] = lines_json
         invoice_json["total_amount"] = self.get_total_amount()
+        invoice_json["vat_breakdown"] = self.get_vat_breakdown()
         return invoice_json
 
 

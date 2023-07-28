@@ -94,6 +94,10 @@ def build_xml(tbai, invoice, pre_invoice=None):
         serial_code.text = pre_invoice["serial_code"]
         num = ET.SubElement(p_inv, "NumFacturaAnterior")
         num.text = pre_invoice["num"]
+        expedition_date = ET.SubElement(
+            p_inv, "FechaExpedicionFacturaAnterior"
+        )
+        expedition_date.text = pre_invoice["expedition_date"]
         signature_value = ET.SubElement(
             p_inv, "SignatureValueFirmaFacturaAnterior"
         )
