@@ -1,7 +1,8 @@
 1.4.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- include data files [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.4.4 (2023-10-05)
