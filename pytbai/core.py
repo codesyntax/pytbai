@@ -347,11 +347,10 @@ class TBai:
 
         headers = {"Content-Type": "application/xml"}
 
-        # TODO: Error handling for timeout
         response = requests.post(
             url=self.subject.authority_api,
             headers=headers,
-            data=etree.tostring(signed_xml),
+            data=signed_xml,
             cert=(cert_file.name, key_file.name),
         )
 
