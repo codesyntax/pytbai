@@ -26,7 +26,6 @@ from pytbai.definitions import (
 )
 from pytbai.utils.xml import build_xml, sign_xml, validate_xml
 from pytbai.utils.crypto import get_keycert_from_p12
-from pytbai.utils.pdf import build_pdf
 
 logger = logging.getLogger("pytbai")
 
