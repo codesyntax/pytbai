@@ -1,7 +1,8 @@
 1.4.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Update core.py [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.4.8 (2024-05-21)
