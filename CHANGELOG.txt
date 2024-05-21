@@ -1,4 +1,4 @@
-1.4.7 (unreleased)
+1.4.7 (2024-05-21)
 ------------------
 
 - Update core.py [Urtzi Odriozola <uodriozola@codesyntax.com>]
