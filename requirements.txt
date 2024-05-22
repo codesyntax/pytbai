@@ -1,4 +1,2 @@
 requests==2.32.2
-qrcode==7.4.2
-weasyprint==60.1
 signxml==3.2.1
