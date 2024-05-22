@@ -1,5 +1,5 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytbai)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/codesyntax/pytbai/python-package.yml)
+![PyPI - Version](https://img.shields.io/pypi/v/pytbai)
 
 # pytbai
 
