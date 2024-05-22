@@ -11,7 +11,7 @@ with open("LICENSE") as f:
 
 setup(
     name="pytbai",
-    version="1.5.0",
+    version="1.5.1",
     description=(
         "pytbai allows to create, manage and send TicketBai invoices to the"
         " Basque tax authorities"
