@@ -144,15 +144,11 @@ class Invoice:
         self.serial_code = serial_code
         self.num = num
         self.description = description
-        self.expedition_date = (
-            expedition_date or datetime.now().date().isoformat()
+        self.expedition_date = expedition_date or datetime.now().date().isoformat()
+        self.expedition_time = expedition_time or datetime.now().time().strftime(
+            "%H:%M:%S"
         )
-        self.expedition_time = (
-            expedition_time or datetime.now().time().strftime("%H:%M:%S")
-        )
-        self.transaction_date = (
-            transaction_date or datetime.now().date().isoformat()
-        )
+        self.transaction_date = transaction_date or datetime.now().date().isoformat()
 
         if not simplified:
             self.simplified = N
@@ -197,21 +193,15 @@ class Invoice:
     def get_vat_breakdown(self):
         breakdown = []
         for vat_type in L11:
-            lines = [
-                line for line in self.get_lines() if line.vat_type == vat_type
-            ]
+            lines = [line for line in self.get_lines() if line.vat_type == vat_type]
             if lines:
                 line_types = {"type": vat_type, "rates": {}}
                 for line in lines:
                     if str(line.vat_rate) in line_types["rates"]:
                         line_types["rates"][str(line.vat_rate)] = {
-                            "base": line_types["rates"][str(line.vat_rate)][
-                                "base"
-                            ]
+                            "base": line_types["rates"][str(line.vat_rate)]["base"]
                             + line.vat_base,
-                            "fee": line_types["rates"][str(line.vat_rate)][
-                                "fee"
-                            ]
+                            "fee": line_types["rates"][str(line.vat_rate)]["fee"]
                             + line.vat_fee,
                         }
                     else:
@@ -309,12 +299,10 @@ class TBai:
             num,
             description,
             simplified=simplified,
-            expedition_date=expedition_date
-            or datetime.now().date().isoformat(),
+            expedition_date=expedition_date or datetime.now().date().isoformat(),
             expedition_time=expedition_time
             or datetime.now().time().strftime("%H:%M:%S"),
-            transaction_date=transaction_date
-            or datetime.now().date().isoformat(),
+            transaction_date=transaction_date or datetime.now().date().isoformat(),
         )
         return invoice
 
@@ -324,9 +312,7 @@ class TBai:
         signed_xml = sign_xml(xml, key, cert)
         if not validate_xml(signed_xml):
             return None
-        return etree.tostring(signed_xml).decode(
-                "utf-8"
-            )
+        return etree.tostring(signed_xml).decode("utf-8")
 
     def send(self, signed_xml, p12_path, password):
         result_json = {
@@ -364,9 +350,7 @@ class TBai:
                 logger.error("XML not accepted")
                 result_json["ErrorXML"] = response.content
                 return result_json
-            result_json["TBAI_ID"] = response_xml.find(
-                ".//IdentificadorTBAI"
-            ).text
+            result_json["TBAI_ID"] = response_xml.find(".//IdentificadorTBAI").text
             result_json["CSV"] = response_xml.find(".//CSV").text
             return result_json
         logger.error("API connection error")

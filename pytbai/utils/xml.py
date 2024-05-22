@@ -24,12 +24,12 @@ def build_xml(tbai, invoice, pre_invoice=None):
         template = file.read()
     temp = Template(template)
 
-    expedition_date = datetime.strptime(
-        invoice.expedition_date, "%Y-%m-%d"
-    ).strftime("%d-%m-%Y")
-    transaction_date = datetime.strptime(
-        invoice.transaction_date, "%Y-%m-%d"
-    ).strftime("%d-%m-%Y")
+    expedition_date = datetime.strptime(invoice.expedition_date, "%Y-%m-%d").strftime(
+        "%d-%m-%Y"
+    )
+    transaction_date = datetime.strptime(invoice.transaction_date, "%Y-%m-%d").strftime(
+        "%d-%m-%Y"
+    )
 
     xml = temp.substitute(
         version=tbai.version,
@@ -94,13 +94,9 @@ def build_xml(tbai, invoice, pre_invoice=None):
         serial_code.text = pre_invoice["serial_code"]
         num = ET.SubElement(p_inv, "NumFacturaAnterior")
         num.text = pre_invoice["num"]
-        expedition_date = ET.SubElement(
-            p_inv, "FechaExpedicionFacturaAnterior"
-        )
+        expedition_date = ET.SubElement(p_inv, "FechaExpedicionFacturaAnterior")
         expedition_date.text = pre_invoice["expedition_date"]
-        signature_value = ET.SubElement(
-            p_inv, "SignatureValueFirmaFacturaAnterior"
-        )
+        signature_value = ET.SubElement(p_inv, "SignatureValueFirmaFacturaAnterior")
         signature_value.text = pre_invoice["signature_value"]
 
     return root

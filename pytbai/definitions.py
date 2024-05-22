@@ -1,7 +1,9 @@
 from decimal import Decimal
 
 TICKETBAI_ACTUAL_VERSION = "1.2"
-DOCUMENTATION_URL = "https://www.gipuzkoa.eus/eu/web/ogasuna/ticketbai/dokumentazioa-eta-araudia"
+DOCUMENTATION_URL = (
+    "https://www.gipuzkoa.eus/eu/web/ogasuna/ticketbai/dokumentazioa-eta-araudia"
+)
 
 DEFAULT_VAT_RATE = Decimal("21")
 
