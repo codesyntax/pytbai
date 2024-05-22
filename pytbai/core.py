@@ -26,7 +26,6 @@ from pytbai.definitions import (
 )
 from pytbai.utils.xml import build_xml, sign_xml, validate_xml
 from pytbai.utils.crypto import get_keycert_from_p12
-from pytbai.utils.pdf import build_pdf
 
 logger = logging.getLogger("pytbai")
 
@@ -319,20 +318,25 @@ class TBai:
         )
         return invoice
 
-    def sign_and_send(self, invoice, p12_path, password, pre_invoice=None):
+    def sign(self, invoice, p12_path, password, pre_invoice=None):
         xml = build_xml(self, invoice, pre_invoice)
         key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         signed_xml = sign_xml(xml, key, cert)
+        if not validate_xml(signed_xml):
+            return None
+        return etree.tostring(signed_xml).decode(
+                "utf-8"
+            )
+
+    def send(self, signed_xml, p12_path, password):
         result_json = {
+            "status": 500,
             "TBAI_ID": None,
             "CSV": None,
-            "SignedXML": None,
-            "ResponseXML": None,
+            "ErrorXML": None,
         }
 
-        if not validate_xml(signed_xml):
-            return result_json
-
+        key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         key_file = tempfile.NamedTemporaryFile()
         key_file.write(key)
         key_file.flush()
@@ -342,11 +346,10 @@ class TBai:
 
         headers = {"Content-Type": "application/xml"}
 
-        # TODO: Error handling for timeout
         response = requests.post(
             url=self.subject.authority_api,
             headers=headers,
-            data=etree.tostring(signed_xml),
+            data=signed_xml,
             cert=(cert_file.name, key_file.name),
         )
 
@@ -354,19 +357,17 @@ class TBai:
         cert_file.close()
 
         if response.ok:
+            result_json["status"] = 200
             response_xml = etree.fromstring(response.content)
             state = response_xml.find(".//Estado").text
             if state == "01":
                 logger.error("XML not accepted")
-                result_json["ResponseXML"] = response.content
+                result_json["ErrorXML"] = response.content
                 return result_json
             result_json["TBAI_ID"] = response_xml.find(
                 ".//IdentificadorTBAI"
             ).text
             result_json["CSV"] = response_xml.find(".//CSV").text
-            result_json["SignedXML"] = etree.tostring(signed_xml).decode(
-                "utf-8"
-            )
             return result_json
         logger.error("API connection error")
         return result_json

@@ -1,7 +1,51 @@
-1.4.4 (unreleased)
-------------------
+1.4.10 (unreleased)
+-------------------
 
 - Nothing changed yet.
+
+
+1.4.9 (2024-05-21)
+------------------
+
+- Update core.py [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+
+
+1.4.8 (2024-05-21)
+------------------
+
+- Update core.py [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+
+
+1.4.7 (2024-05-21)
+------------------
+
+- Update core.py [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+- Delete pytbai/utils/pdf.py [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+
+
+1.4.6 (2023-10-05)
+------------------
+
+- signedxml string [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+
+
+1.4.5 (2023-10-05)
+------------------
+
+- include data files [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
+
+
+1.4.4 (2023-10-05)
+------------------
+
+- core modifications [Urtzi Odriozola <uodriozola@codesyntax.com>]
+
 
 
 1.4.3 (2023-07-28)

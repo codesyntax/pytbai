@@ -11,7 +11,7 @@ with open("LICENSE") as f:
 
 setup(
     name="pytbai",
-    version="1.4.4.dev0",
+    version="1.4.10.dev0",
     description=(
         "pytbai allows to create, manage and send TicketBai invoices to the"
         " Basque tax authorities"
@@ -23,6 +23,7 @@ setup(
     url="https://github.com/codesyntax/pytbai",
     license=license,
     packages=find_packages(exclude=("tests",)),
+    include_package_data = True,
     package_data={
         "pytbai": ["templates/*"],
     },
