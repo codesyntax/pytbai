@@ -29,8 +29,8 @@ setup(
     },
     install_requires=[
         "requests",
-        "signxml<=3.2.1",
         "pyOpenSSL<=23.2.0",
+        "signxml<=3.2.1",
     ],
     classifiers=[
         "Intended Audience :: Developers",
