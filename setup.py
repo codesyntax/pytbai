@@ -1,22 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-try: # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError: # for pip <= 9.0.3
-    from pip.req import parse_requirements
-
-def get_requirements(source):
-    try:
-        install_reqs = parse_requirements(source, session=False)
-    except TypeError:
-        # Older version of pip.
-        install_reqs = parse_requirements(source)
-    try:
-        requirements = [str(ir.req) for ir in install_reqs]
-    except:
-        requirements = [str(ir.requirement) for ir in install_reqs]
-    return list(requirements)
 
 
 with open("README.md") as f:
@@ -43,7 +27,11 @@ setup(
     package_data={
         "pytbai": ["templates/*"],
     },
-    install_requires=get_requirements('requirements.txt'),
+    install_requires=[
+        "requests",
+        "signxml<=3.2.1",
+        "pyOpenSSL<=23.2.0",
+    ],
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
