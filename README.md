@@ -60,7 +60,7 @@ json_structure = tbai.get_json(invoice)
 - [ ] Corrected or replaced invoices
 - [ ] Tax free invoices
 - [ ] Invoices without national counterparty
-- [ ] Chaining of previous invoice
+- [x] Chaining of previous invoice
 
 ## How to contribute
 
