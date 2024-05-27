@@ -31,7 +31,7 @@ setup(
         "requests",
         "pyOpenSSL<=23.2.0",
         "cryptography<=41.0.7",
-        "signxml<=3.2.1",
+        "signxml<=3.2.2",
     ],
     classifiers=[
         "Intended Audience :: Developers",
