@@ -30,7 +30,7 @@ setup(
     install_requires=[
         "requests",
         "pyOpenSSL<=23.2.0",
-        "cryptography<=41.0.7",
+        "cryptography<=42.0.7",
         "signxml<=3.2.1",
     ],
     classifiers=[
