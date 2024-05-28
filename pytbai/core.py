@@ -77,7 +77,7 @@ class InvoiceLine:
         description,
         quantity=Decimal("0"),
         amount=Decimal("0"),
-        discount=0,
+        discount=Decimal("0"),
         vat_rate=DEFAULT_VAT_RATE,
         vat_type=None,
         vat_included=None,
@@ -86,7 +86,6 @@ class InvoiceLine:
         self.quantity = quantity
         self.discount = discount
         self.vat_rate = vat_rate
-        self.vat_included = vat_included
         self.vat_fee = Decimal("0")
         if not vat_type:
             self.vat_type = S1
@@ -98,7 +97,7 @@ class InvoiceLine:
                 % DOCUMENTATION_URL
             )
 
-        if not self.vat_included:
+        if not vat_included:
             self.unit_amount = amount
             line_base = self.quantity * self.unit_amount
             self.vat_base = line_base - self.get_discount_qty(line_base)
