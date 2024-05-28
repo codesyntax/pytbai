@@ -229,10 +229,11 @@ class Invoice:
         line = InvoiceLine(
             description,
             quantity,
-            unit_import,
+            amount,
             discount,
             vat_rate,
             vat_type,
+            vat_included,
         )
         self.lines.append(line)
 
