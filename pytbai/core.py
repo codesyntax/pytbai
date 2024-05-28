@@ -115,6 +115,9 @@ class InvoiceLine:
             vat_base = self.vat_fee / (self.vat_rate / 100)
             self.vat_base = vat_base.quantize(Decimal("0.00"))
 
+    def get_line_base(self):
+        return self.quantity * self.unit_amount
+
     def get_discount_qty(self, amount):
         discount_qty = Decimal("0")
         if self.discount:
