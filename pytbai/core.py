@@ -98,20 +98,20 @@ class InvoiceLine:
                 % DOCUMENTATION_URL
             )
 
-        if self.vat_included:
-            self.total = amount
+        if not self.vat_included:
+            self.unit_amount = amount
             line_base = self.quantity * self.unit_amount
             self.vat_base = line_base - self.get_discount_qty(line_base)
             vat_fee = self.vat_base * (self.vat_rate / 100)
             self.vat_fee = vat_fee.quantize(Decimal("0.00"))
             self.total = self.vat_base + self.vat_fee
         else:
-            self.unit_amount = amount
-            line_base = self.total - self.get_discount_qty(self.total)
+            self.total = amount
+            line_base = (self.total - self.get_discount_qty(self.total)) / self.quantity
             self.unit_amount = (line_base / (1 + (self.vat_rate / 100))).quantize(
                 Decimal("0.00")
             )
-            self.vat_fee = line_base - self.unit_amount
+            self.vat_fee = line_base.quantize(Decimal("0.00")) - self.unit_amount
             vat_base = self.vat_fee / (self.vat_rate / 100)
             self.vat_base = vat_base.quantize(Decimal("0.00"))
 
