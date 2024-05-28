@@ -108,18 +108,18 @@ class InvoiceLine:
         else:
             self.unit_amount = amount
             line_base = self.total - self.get_discount_qty(self.total)
-            self.unit_amount = (line_base / (1 + (self.vat_rate / 100))).quantize(Decimal("0.00"))
+            self.unit_amount = (line_base / (1 + (self.vat_rate / 100))).quantize(
+                Decimal("0.00")
+            )
             self.vat_fee = line_base - self.unit_amount
             vat_base = self.vat_fee / (self.vat_rate / 100)
             self.vat_base = vat_base.quantize(Decimal("0.00"))
-            
 
     def get_discount_qty(self, amount):
         discount_qty = 0
         if self.discount:
             discount_qty = amount * (self.discount / 100)
         return discount_qty.quantize(Decimal("0.00"))
-        
 
     def get_dict(self):
         return copy.deepcopy(self.__dict__)
