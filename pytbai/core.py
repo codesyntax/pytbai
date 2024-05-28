@@ -80,7 +80,7 @@ class InvoiceLine:
         discount=Decimal("0"),
         vat_rate=DEFAULT_VAT_RATE,
         vat_type=None,
-        vat_included=None,
+        vat_included=False,
     ):
         self.description = description
         self.quantity = quantity
@@ -220,10 +220,11 @@ class Invoice:
         self,
         description,
         quantity=Decimal("0"),
-        unit_import=Decimal("0"),
+        amount=Decimal("0"),
         discount=Decimal("0"),
         vat_rate=DEFAULT_VAT_RATE,
         vat_type=S1,
+        vat_included=False,
     ):
         line = InvoiceLine(
             description,
