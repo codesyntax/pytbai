@@ -76,17 +76,18 @@ class InvoiceLine:
         self,
         description,
         quantity=Decimal("0"),
-        unit_amount=Decimal("0"),
+        amount=Decimal("0"),
         discount=Decimal("0"),
         vat_rate=DEFAULT_VAT_RATE,
         vat_type=None,
+        vat_included=None,
     ):
         self.description = description
         self.quantity = quantity
-        self.unit_amount = unit_amount
         self.discount = discount
         self.vat_rate = vat_rate
-        self.vat_fee = None
+        self.vat_included = vat_included
+        self.vat_fee = 0
         if not vat_type:
             self.vat_type = S1
         elif vat_type in L11:
@@ -97,31 +98,28 @@ class InvoiceLine:
                 % DOCUMENTATION_URL
             )
 
-        self.set_base()
-        self.set_vat_fee()
-        self.set_total()
-
-    def get_line_base(self):
-        line_base = self.quantity * self.unit_amount
-        return line_base.quantize(Decimal("0.00"))
-
-    def get_discount_qty(self, line_base):
-        discount_qty = line_base * (self.discount / 100)
-        return discount_qty.quantize(Decimal("0.00"))
-
-    def set_base(self):
-        line_base = self.get_line_base()
-        if self.discount:
+        if self.vat_included:
+            self.total = amount
+            line_base = self.quantity * self.unit_amount
             self.vat_base = line_base - self.get_discount_qty(line_base)
+            vat_fee = self.vat_base * (self.vat_rate / 100)
+            self.vat_fee = vat_fee.quantize(Decimal("0.00"))
+            self.total = self.vat_base + self.vat_fee
         else:
-            self.vat_base = line_base
+            self.unit_amount = amount
+            line_base = self.total - self.get_discount_qty(self.total)
+            self.unit_amount = (line_base / (1 + (self.vat_rate / 100))).quantize(Decimal("0.00"))
+            self.vat_fee = line_base - self.unit_amount
+            vat_base = self.vat_fee / (self.vat_rate / 100)
+            self.vat_base = vat_base.quantize(Decimal("0.00"))
+            
 
-    def set_vat_fee(self):
-        vat_fee = self.vat_base * (self.vat_rate / 100)
-        self.vat_fee = vat_fee.quantize(Decimal("0.00"))
-
-    def set_total(self):
-        self.total = self.vat_base + self.vat_fee
+    def get_discount_qty(self, amount):
+        discount_qty = 0
+        if self.discount:
+            discount_qty = amount * (self.discount / 100)
+        return discount_qty.quantize(Decimal("0.00"))
+        
 
     def get_dict(self):
         return copy.deepcopy(self.__dict__)
