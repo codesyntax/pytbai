@@ -77,7 +77,7 @@ class InvoiceLine:
         description,
         quantity=Decimal("0"),
         amount=Decimal("0"),
-        discount=Decimal("0"),
+        discount=0,
         vat_rate=DEFAULT_VAT_RATE,
         vat_type=None,
         vat_included=None,
