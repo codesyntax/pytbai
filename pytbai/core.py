@@ -110,7 +110,7 @@ class InvoiceLine:
                 Decimal("0.00")
             )
             self.vat_fee =  self.total - self.vat_base
-            line_base = self.vat_base + self.get_discount_qty(self.vat_base))
+            line_base = self.vat_base + self.get_discount_qty(self.vat_base)
             self.unit_amount = (line_base / self.quantity).quantize(
                 Decimal("0.00")
             )
