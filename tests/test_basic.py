@@ -16,7 +16,11 @@ from tests.data.tbai_json import (
 )
 
 CONFIG = {
-    "subject": {"entity_id": "99999974E", "name": "REPRESENTANTESPJ FICTICIO", "address": "Some address"},
+    "subject": {
+        "entity_id": "99999974E",
+        "name": "REPRESENTANTESPJ FICTICIO",
+        "address": "Some address",
+    },
     "software": {
         "license": "TBAIGIPRE00000000501",
         "dev_entity": "P2000000F",
