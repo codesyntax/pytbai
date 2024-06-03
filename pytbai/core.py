@@ -35,7 +35,7 @@ class Subject:
         self,
         entity_id,
         name,
-        address,
+        address=None,
         territory=GIPUZKOA,
         multi_recipient=N,
         external_invoice=N,
