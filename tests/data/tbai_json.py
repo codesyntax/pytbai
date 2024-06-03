@@ -4,6 +4,7 @@ TBAI_JSON = {
     "subject": {
         "entity_id": "99999974E",
         "name": "REPRESENTANTESPJ FICTICIO",
+        "address": "Some address",
         "authority_api": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
         "qr_api": "https://tbai.prep.gipuzkoa.eus/qr/",
         "multi_recipient": "N",
@@ -23,6 +24,7 @@ TBAI_INVOICE_JSON = {
     "subject": {
         "entity_id": "99999974E",
         "name": "REPRESENTANTESPJ FICTICIO",
+        "address": "Some address",
         "authority_api": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
         "qr_api": "https://tbai.prep.gipuzkoa.eus/qr/",
         "multi_recipient": "N",
@@ -56,6 +58,7 @@ TBAI_INVOICE_LINES_JSON = {
     "subject": {
         "entity_id": "99999974E",
         "name": "REPRESENTANTESPJ FICTICIO",
+        "address": "Some address",
         "authority_api": "https://tbai-z.prep.gipuzkoa.eus/sarrerak/alta",
         "qr_api": "https://tbai.prep.gipuzkoa.eus/qr/",
         "multi_recipient": "N",
