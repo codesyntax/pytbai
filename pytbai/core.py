@@ -35,6 +35,7 @@ class Subject:
         self,
         entity_id,
         name,
+        address,
         territory=GIPUZKOA,
         multi_recipient=N,
         external_invoice=N,
@@ -42,6 +43,7 @@ class Subject:
     ):
         self.entity_id = entity_id
         self.name = name
+        self.address = address
         if not territory:
             self.authority_api = GIPUZKOA[env]["invoice"]
             self.qr_api = GIPUZKOA[env]["qr"]
