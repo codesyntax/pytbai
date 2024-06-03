@@ -16,7 +16,7 @@ from tests.data.tbai_json import (
 )
 
 CONFIG = {
-    "subject": {"entity_id": "99999974E", "name": "REPRESENTANTESPJ FICTICIO"},
+    "subject": {"entity_id": "99999974E", "name": "REPRESENTANTESPJ FICTICIO", "address": "Some address"},
     "software": {
         "license": "TBAIGIPRE00000000501",
         "dev_entity": "P2000000F",
@@ -34,6 +34,7 @@ class BasicTestSuite(unittest.TestCase):
         self.assertIsNotNone(tbai.subject)
         self.assertEqual(tbai.subject.entity_id, "99999974E")
         self.assertEqual(tbai.subject.name, "REPRESENTANTESPJ FICTICIO")
+        self.assertEqual(tbai.subject.address, "Some address")
 
     def test_tbai_software_constructor(self):
         tbai = TBai(CONFIG)
