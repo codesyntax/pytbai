@@ -18,7 +18,7 @@ AUTHORITY_APIS = {
         },
         "PROD": {
             "invoice": "https://tbai.egoitza.gipuzkoa.eus/sarrerak/alta",
-            "qr": "https://tbai.egoitza.gipuzkoa.eus/qr",
+            "qr": "https://tbai.egoitza.gipuzkoa.eus/qr/",
         },
     },
 }
