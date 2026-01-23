@@ -182,6 +182,7 @@ class Invoice:
             )
 
         self.lines = []
+        self._previous_invoice = None  # Para encadenamiento TicketBAI
 
     def get_lines(self):
         return self.lines
@@ -244,6 +245,53 @@ class Invoice:
             curr_lines.remove(line)
         self.lines = curr_lines
 
+    def set_previous_invoice(self, serial_code, num, expedition_date, signature_value):
+        """
+        Establece la factura anterior para el encadenamiento (TicketBAI).
+        
+        Args:
+            serial_code (str): Serie de la factura anterior (ej: "A", "B")
+            num (str): Número de la factura anterior (ej: "TB-2026-0009" o "0009")
+            expedition_date (str): Fecha de expedición en formato DD-MM-YYYY (ej: "15-01-2026")
+            signature_value (str): Valor completo del SignatureValue de la factura anterior (primeros 100 caracteres)
+        
+        Example:
+            >>> invoice = tbai.create_invoice("A", 100, "Descripción", "S")
+            >>> invoice.set_previous_invoice(
+            ...     serial_code="A",
+            ...     num="99",
+            ...     expedition_date="15-01-2026",
+            ...     signature_value="MEJP9Z/7SbnG+Fb8BzZAbWYRj95wFgY0jwcZhpMMf+Sbhjn1Cc..."
+            ... )
+        
+        Note:
+            La primera factura de cada serie NO debe tener factura anterior.
+            Solo las facturas subsiguientes deben usar este método.
+        """
+        self._previous_invoice = {
+            'serial_code': serial_code,
+            'num': str(num),
+            'expedition_date': expedition_date,
+            'signature_value': signature_value[:100],  # TicketBAI solo requiere primeros 100 caracteres
+        }
+
+    def get_previous_invoice(self):
+        """
+        Obtiene los datos de la factura anterior para el encadenamiento.
+        
+        Returns:
+            dict or None: Diccionario con los datos de la factura anterior si existe,
+                         None si es la primera factura de la serie.
+        
+        Example:
+            >>> prev = invoice.get_previous_invoice()
+            >>> if prev:
+            ...     print(f"Factura anterior: {prev['serial_code']}-{prev['num']}")
+            ... else:
+            ...     print("Primera factura de la serie")
+        """
+        return self._previous_invoice
+
     def get_dict(self):
         invoice_json = copy.deepcopy(self.__dict__)
         lines_json = []
@@ -252,6 +300,9 @@ class Invoice:
         invoice_json["lines"] = lines_json
         invoice_json["total_amount"] = self.get_total_amount()
         invoice_json["vat_breakdown"] = self.get_vat_breakdown()
+        # Incluir encadenamiento si existe
+        if self._previous_invoice:
+            invoice_json["previous_invoice"] = self._previous_invoice
         return invoice_json
 
 
@@ -310,6 +361,9 @@ class TBai:
         return invoice
 
     def sign(self, invoice, p12_path, password, pre_invoice=None):
+        # Si no se proporciona pre_invoice, usar el de la factura si existe
+        if pre_invoice is None:
+            pre_invoice = invoice.get_previous_invoice()
         xml = build_xml(self, invoice, pre_invoice)
         key, cert = get_keycert_from_p12(p12_path, password.encode("utf-8"))
         signed_xml = sign_xml(xml, key, cert)
