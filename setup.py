@@ -29,7 +29,7 @@ setup(
     },
     install_requires=[
         "requests",
-        "pyOpenSSL<=24.1.0",
+        "pyOpenSSL<=26.4.0",
         "cryptography<=42.0.7",
         "signxml<=3.2.2",
     ],
