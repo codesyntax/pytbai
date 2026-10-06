@@ -8,8 +8,6 @@ from string import Template
 from signxml import DigestAlgorithm
 from signxml.xades import (
     XAdESSigner,
-    XAdESVerifier,
-    XAdESVerifyResult,
     XAdESSignaturePolicy,
     XAdESDataObjectFormat,
 )

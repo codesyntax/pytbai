@@ -7,7 +7,6 @@ import logging
 from decimal import Decimal
 from lxml import etree
 from json import JSONEncoder
-from decimal import Decimal
 from pytbai.definitions import (
     TICKETBAI_ACTUAL_VERSION,
     DOCUMENTATION_URL,
