@@ -138,7 +138,7 @@ class BasicTestSuite(unittest.TestCase):
     def test_validate_xml_rejects_an_invalid_document(self):
         from lxml import etree
 
-        self.assertFalse(validate_xml(etree.fromstring("<Kaixo/>")))
+        self.assertFalse(validate_xml(etree.fromstring("<invalid/>")))
 
     def test_prod_endpoints_match_the_published_1_6_3(self):
         from pytbai.definitions import AUTHORITY_APIS, GIPUZKOA
