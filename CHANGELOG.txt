@@ -1,3 +1,12 @@
+1.7.1 (unreleased)
+------------------
+
+- Allow pyOpenSSL 24.2.1 and cryptography 43.0.0. pyOpenSSL 25 removes
+  ``OpenSSL.crypto.verify``, which signxml 3.2.2 imports at module level, so
+  24.2.1 is a hard upper bound until signxml is upgraded to 4.0 or later
+  (signxml 4.0 drops the pyOpenSSL dependency).
+
+
 1.7.0 (unreleased)
 ------------------
 
