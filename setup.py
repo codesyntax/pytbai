@@ -2,7 +2,6 @@
 
 from setuptools import setup, find_packages
 
-
 with open("README.md") as f:
     readme = f.read()
 
@@ -11,7 +10,7 @@ with open("LICENSE") as f:
 
 setup(
     name="pytbai",
-    version="1.6.3",
+    version="1.7.0",
     description=(
         "pytbai allows to create, manage and send TicketBai invoices to the"
         " Basque tax authorities"
@@ -23,23 +22,23 @@ setup(
     url="https://github.com/codesyntax/pytbai",
     license=license,
     packages=find_packages(exclude=("tests",)),
+    python_requires=">=3.11",
     include_package_data=True,
     package_data={
         "pytbai": ["templates/*"],
     },
     install_requires=[
         "requests",
-        "pyOpenSSL<=23.2.0",
-        "cryptography<=41.0.7",
-        "signxml<=3.2.1",
+        "pyOpenSSL<=24.1.0",
+        "cryptography<=42.0.7",
+        "signxml<=3.2.2",
     ],
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
 )

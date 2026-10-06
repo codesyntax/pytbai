@@ -120,6 +120,35 @@ class BasicTestSuite(unittest.TestCase):
         tbai_json = tbai.get_json(invoice)
         self.assertDictEqual(json.loads(tbai_json), TBAI_INVOICE_LINES_JSON)
 
+    def test_get_keycert_from_p12_returns_pem(self):
+        path = os.path.dirname(pytbai.__file__)
+        cert_path = os.path.join(path, "../tests/certs/cert_for_tests.p12")
+        key, cert = get_keycert_from_p12(cert_path, b"testpassword")
+        self.assertIn(b"-----BEGIN", key)
+        self.assertIn(b"-----BEGIN CERTIFICATE-----", cert)
+
+    def test_get_keycert_from_p12_accepts_a_string_password(self):
+        # django-ticketbai passes Config.password, a str, not bytes.
+        path = os.path.dirname(pytbai.__file__)
+        cert_path = os.path.join(path, "../tests/certs/cert_for_tests.p12")
+        key, cert = get_keycert_from_p12(cert_path, "testpassword")
+        self.assertEqual(key, get_keycert_from_p12(cert_path, b"testpassword")[0])
+        self.assertIn(b"-----BEGIN CERTIFICATE-----", cert)
+
+    def test_validate_xml_rejects_an_invalid_document(self):
+        from lxml import etree
+
+        self.assertFalse(validate_xml(etree.fromstring("<Kaixo/>")))
+
+    def test_prod_endpoints_match_the_published_1_6_3(self):
+        from pytbai.definitions import AUTHORITY_APIS, GIPUZKOA
+
+        prod = AUTHORITY_APIS[GIPUZKOA]["PROD"]
+        self.assertEqual(
+            prod["invoice"], "https://tbai-z.egoitza.gipuzkoa.eus/sarrerak/alta"
+        )
+        self.assertEqual(prod["qr"], "https://tbai.egoitza.gipuzkoa.eus/qr/")
+
 
 if __name__ == "__main__":
     unittest.main()

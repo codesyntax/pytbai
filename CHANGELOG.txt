@@ -1,3 +1,12 @@
+1.7.0 (unreleased)
+------------------
+
+- Allow signxml 3.2.2, cryptography 42.0.7 and pyOpenSSL 24.1.0.
+- Read PKCS#12 files with cryptography instead of the removed
+  ``OpenSSL.crypto.load_pkcs12`` (pyOpenSSL 24).
+- Add Python 3.12 support; require Python 3.11 or newer.
+
+
 1.4.10 (unreleased)
 -------------------
 
