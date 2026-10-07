@@ -1,4 +1,5 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pytbai)
+![Status](https://img.shields.io/badge/status-alpha-orange)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/codesyntax/pytbai/python-package.yml)
 ![PyPI - Version](https://img.shields.io/pypi/v/pytbai)
 
