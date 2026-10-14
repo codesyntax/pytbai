@@ -30,7 +30,7 @@ setup(
     install_requires=[
         "requests",
         # signxml 3.2.2 imports OpenSSL.crypto.verify, removed in pyOpenSSL 25.
-        "pyOpenSSL<=24.2.1",
+        "pyOpenSSL<=26.4.0",
         "cryptography<=50.0.2",
         "signxml<=3.2.2",
     ],
