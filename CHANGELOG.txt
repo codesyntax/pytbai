@@ -19,7 +19,21 @@
 1.4.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+ADDED:
+- Invoice chaining support (EncadenamientoFacturaAnterior) for TicketBAI compliance
+- New method: Invoice.set_previous_invoice() to establish the previous invoice in the chain
+- New method: Invoice.get_previous_invoice() to retrieve previous invoice data
+- Automatic integration of previous invoice data in XML generation
+- Unit tests for invoice chaining (tests/test_encadenamiento.py)
+- Integration test demonstrating multi-invoice chaining (tests/test_integration_chain.py)
+
+CHANGED:
+- Updated TBai.sign() to automatically use invoice's previous_invoice if not explicitly provided
+- Updated Invoice.get_dict() to include previous_invoice data when available
+- Updated README.md with invoice chaining documentation and examples
+
+FIXED:
+- SignatureValue is now automatically truncated to 100 characters as required by TicketBAI specification
 
 
 1.4.9 (2024-05-21)

@@ -53,6 +53,61 @@ You can also get the full structure of TBai invoice:
 json_structure = tbai.get_json(invoice)
 ```
 
+## Invoice Chaining (Encadenamiento)
+
+TicketBAI requires each invoice to reference the `SignatureValue` of the previous invoice in the same series, creating a blockchain-style chain. This prevents invoice manipulation and ensures regulatory compliance.
+
+### Example: Chaining Invoices
+
+```python
+from pytbai import TBai
+from decimal import Decimal
+
+config = {
+    "subject": {
+        "entity_id": "B20456794",
+        "name": "YOUR COMPANY S.L."
+    },
+    "software": {
+        "license": "TBAIPRUEBA",
+        "dev_entity": "A48119820",
+        "soft_name": "TicketBAI Software",
+        "soft_version": "1.0.0"
+    }
+}
+
+tbai = TBai(config)
+
+# First invoice (no previous invoice)
+invoice1 = tbai.create_invoice("A", 1, "First invoice", "S")
+invoice1.create_line("Product", Decimal("1"), Decimal("100"))
+signed_xml_1 = tbai.sign(invoice1, "/path/to/cert.p12", "password")
+result1 = tbai.send(signed_xml_1, "/path/to/cert.p12", "password")
+
+# Extract SignatureValue from the signed XML or API response
+# (In production, you would extract this from result1 or the signed XML)
+signature_value_1 = "MEJP9Z/7SbnG+Fb8BzZAbWYRj95wFgY0jwcZhpMMf+Sbhjn1Cc..."
+
+# Second invoice (chained to first)
+invoice2 = tbai.create_invoice("A", 2, "Second invoice", "S")
+invoice2.set_previous_invoice(
+    serial_code="A",
+    num="1",
+    expedition_date="22-01-2026",  # Format: DD-MM-YYYY
+    signature_value=signature_value_1
+)
+invoice2.create_line("Product", Decimal("1"), Decimal("200"))
+signed_xml_2 = tbai.sign(invoice2, "/path/to/cert.p12", "password")
+result2 = tbai.send(signed_xml_2, "/path/to/cert.p12", "password")
+```
+
+**Important Notes:**
+
+- The **first invoice** of each series should NOT have a previous invoice
+- Only **subsequent invoices** should use `set_previous_invoice()`
+- The `signature_value` is typically extracted from Hacienda's response after successfully sending the previous invoice
+- TicketBAI only uses the first 100 characters of the SignatureValue (this is handled automatically)
+
 ## TODO
 
 - [ ] Recipient data
@@ -62,7 +117,7 @@ json_structure = tbai.get_json(invoice)
 - [ ] Corrected or replaced invoices
 - [ ] Tax free invoices
 - [ ] Invoices without national counterparty
-- [x] Chaining of previous invoice
+- [x] ~~Chaining of previous invoice~~ ✅ **IMPLEMENTED**
 
 ## How to contribute
 
