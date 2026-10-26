@@ -32,7 +32,7 @@ setup(
         # signxml 3.2.2 imports OpenSSL.crypto.verify, removed in pyOpenSSL 25.
         "pyOpenSSL<=24.2.1",
         "cryptography<=50.0.2",
-        "signxml<=3.2.2",
+        "signxml<=5.2.0",
     ],
     classifiers=[
         "Intended Audience :: Developers",
