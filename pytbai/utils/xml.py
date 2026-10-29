@@ -15,6 +15,23 @@ from signxml.xades import (
 logger = logging.getLogger("pytbai")
 
 
+class _XSDResolver(etree.Resolver):
+    """Load the W3C xmldsig schema from the bundled copy.
+
+    lxml 6 blocks network entity loading by default, while the TicketBAI
+    XSD imports xmldsig-core-schema.xsd over HTTP.
+    """
+
+    def resolve(self, url, pubid, context):
+        if url.endswith("xmldsig-core-schema.xsd"):
+            schema_path = os.path.join(
+                os.path.dirname(pytbai.__file__),
+                "templates/XSD/xmldsig-core-schema.xsd",
+            )
+            return self.resolve_filename(schema_path, context)
+        return None
+
+
 def build_xml(tbai, invoice, pre_invoice=None):
     path = os.path.dirname(pytbai.__file__)
     structure_file = os.path.join(path, "templates/XML/tbai_structure.xml")
@@ -103,15 +120,17 @@ def build_xml(tbai, invoice, pre_invoice=None):
 def validate_xml(xml):
     path = os.path.dirname(pytbai.__file__)
     xsd_file = os.path.join(path, "templates/XSD/ticketBaiV1-2-1.xsd")
-    with open(xsd_file, "r") as file:
-        xmlschema_doc = etree.parse(file)
-        xmlschema = etree.XMLSchema(xmlschema_doc)
-        try:
-            xmlschema.assert_(xml)
-        except AssertionError as msg:
-            logger.error(msg)
-            return False
-        return True
+    parser = etree.XMLParser()
+    parser.resolvers.add(_XSDResolver())
+    with open(xsd_file, "rb") as file:
+        xmlschema_doc = etree.parse(file, parser)
+    xmlschema = etree.XMLSchema(xmlschema_doc)
+    try:
+        xmlschema.assert_(xml)
+    except AssertionError as msg:
+        logger.error(msg)
+        return False
+    return True
 
 
 def sign_xml(xml, key, cert):

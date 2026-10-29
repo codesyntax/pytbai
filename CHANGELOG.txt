@@ -1,3 +1,14 @@
+1.8.0 (unreleased)
+------------------
+
+- Upgrade the signing stack: require signxml 5.2+, cryptography 46.0.6+ and
+  lxml 6.1+. Drop pyOpenSSL, which signxml 4.0+ no longer uses.
+- Bundle the W3C xmldsig schema locally so TicketBAI XSD validation keeps
+  working with lxml 6, which blocks network entity loading.
+- Replace the expired test PKCS#12 certificate and add signing tests for the
+  TicketBAI signature profile, XSD validation and signature verification.
+
+
 1.7.1 (unreleased)
 ------------------
 
