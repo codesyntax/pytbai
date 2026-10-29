@@ -10,7 +10,7 @@ with open("LICENSE") as f:
 
 setup(
     name="pytbai",
-    version="1.7.1",
+    version="1.8.0",
     description=(
         "pytbai allows to create, manage and send TicketBai invoices to the"
         " Basque tax authorities"
@@ -25,14 +25,13 @@ setup(
     python_requires=">=3.11",
     include_package_data=True,
     package_data={
-        "pytbai": ["templates/*"],
+        "pytbai": ["templates/*", "templates/XSD/*"],
     },
     install_requires=[
         "requests",
-        # signxml 3.2.2 imports OpenSSL.crypto.verify, removed in pyOpenSSL 25.
-        "pyOpenSSL<=24.2.1",
-        "cryptography<=50.0.2",
-        "signxml<=3.2.2",
+        "cryptography>=46.0.6,<51",
+        "lxml>=6.1.0,<7",
+        "signxml>=5.2,<6",
     ],
     classifiers=[
         "Intended Audience :: Developers",
