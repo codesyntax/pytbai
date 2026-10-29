@@ -28,6 +28,8 @@ from pytbai.utils.crypto import get_keycert_from_p12
 
 logger = logging.getLogger("pytbai")
 
+DEFAULT_TIMEOUT = (10, 30)
+
 
 class Subject:
     def __init__(
@@ -334,15 +336,23 @@ class TBai:
 
         headers = {"Content-Type": "application/xml"}
 
-        response = requests.post(
-            url=self.subject.authority_api,
-            headers=headers,
-            data=signed_xml,
-            cert=(cert_file.name, key_file.name),
-        )
-
-        key_file.close()
-        cert_file.close()
+        try:
+            response = requests.post(
+                url=self.subject.authority_api,
+                headers=headers,
+                data=signed_xml,
+                cert=(cert_file.name, key_file.name),
+                timeout=DEFAULT_TIMEOUT,
+            )
+        except requests.exceptions.RequestException as exc:
+            logger.exception(
+                "TicketBAI connection error: %s", self.subject.authority_api
+            )
+            result_json["ErrorXML"] = str(exc)
+            return result_json
+        finally:
+            key_file.close()
+            cert_file.close()
 
         if response.ok:
             result_json["status"] = 200
