@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import pytbai
+import requests
 from pytbai import TBai
+from pytbai.core import DEFAULT_TIMEOUT
 from pytbai.utils.xml import build_xml, validate_xml, sign_xml
 import os
 import json
 import unittest
+from unittest.mock import patch
 from datetime import datetime
 from decimal import Decimal
 from pytbai.utils.crypto import get_keycert_from_p12
@@ -148,6 +151,41 @@ class BasicTestSuite(unittest.TestCase):
             prod["invoice"], "https://tbai-z.egoitza.gipuzkoa.eus/sarrerak/alta"
         )
         self.assertEqual(prod["qr"], "https://tbai.egoitza.gipuzkoa.eus/qr/")
+
+    @patch("pytbai.core.get_keycert_from_p12", return_value=(b"key", b"cert"))
+    @patch("pytbai.core.requests.post")
+    def test_send_posts_with_a_timeout(self, mock_post, mock_get_keycert):
+        mock_post.return_value.ok = True
+        mock_post.return_value.content = (
+            b"<Respuesta><Estado>00</Estado>"
+            b"<IdentificadorTBAI>TBAI-1</IdentificadorTBAI>"
+            b"<CSV>CSV-1</CSV></Respuesta>"
+        )
+
+        tbai = TBai(CONFIG)
+        result = tbai.send("<xml/>", "dummy.p12", "password")
+
+        self.assertEqual(result["status"], 200)
+        self.assertEqual(result["TBAI_ID"], "TBAI-1")
+        self.assertEqual(result["CSV"], "CSV-1")
+        self.assertEqual(mock_post.call_args.kwargs["timeout"], DEFAULT_TIMEOUT)
+
+    @patch("pytbai.core.get_keycert_from_p12", return_value=(b"key", b"cert"))
+    @patch(
+        "pytbai.core.requests.post",
+        side_effect=requests.exceptions.SSLError("certificate verify failed"),
+    )
+    def test_send_returns_a_structured_error_on_request_exception(
+        self, mock_post, mock_get_keycert
+    ):
+        tbai = TBai(CONFIG)
+        result = tbai.send("<xml/>", "dummy.p12", "password")
+
+        self.assertEqual(result["status"], 500)
+        self.assertIsNone(result["TBAI_ID"])
+        self.assertIsNone(result["CSV"])
+        self.assertIn("certificate verify failed", result["ErrorXML"])
+        self.assertEqual(mock_post.call_args.kwargs["timeout"], DEFAULT_TIMEOUT)
 
 
 if __name__ == "__main__":
